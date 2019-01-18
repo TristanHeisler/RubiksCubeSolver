@@ -1,22 +1,13 @@
 ﻿using UnityEngine;
 
-public class Rubiks : MonoBehaviour {
+public class Rubiks : MonoBehaviour
+{
     //Constants
     private const int ROTATION_SPEED = 10;
     private const int FRAMES_PER_ROTATION = 90 / ROTATION_SPEED;
 
     //Enums
-    private enum Face
-    {
-        Blue,
-        Green,
-        Orange,
-        Red,
-        White,
-        Yellow
-    }
-
-    private enum Rotation
+    private enum RotationDirection
     {
         Clockwise = 1,
         Counterclockwise = -1
@@ -52,254 +43,171 @@ public class Rubiks : MonoBehaviour {
     public GameObject Middle_O;
     public GameObject Middle_R;
     public GameObject Middle_W;
-    public GameObject Middle_Y;
+    public GameObject Middle_Y;  
 
-    //Variables concerning cube face rotation
-    private Face currentFace;
-    private Rotation currentRotation;
-    private bool isRotating = false;
-    private int remainingRotationFrames;
+    //Class to represent a face of the cube
+    private class CubeFace
+    {
+        public GameObject[,] cubes;
+        public Vector3 rotationAxis;
+    }
 
     //Variables to record the current state of each cube face
-    private GameObject[,] BlueFace, GreenFace, OrangeFace, RedFace, WhiteFace, YellowFace;
+    private CubeFace BlueFace, GreenFace, OrangeFace, RedFace, WhiteFace, YellowFace;
+
+    //Variables concerning cube face rotation
+    private bool isRotating = false;
+    private CubeFace rotatingFace;
+    private RotationDirection rotationDirection;
+    private int remainingRotationFrames;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         InitializeCubeFaces();        
     }
 
     private void InitializeCubeFaces()
     {
-        BlueFace = new GameObject[3, 3] {
-            { Corner_OBY, Edge_BY, Corner_RBY},
-            { Edge_OB, Middle_B, Edge_RB},
-            { Corner_OBW, Edge_BW, Corner_RBW}
+        BlueFace = new CubeFace
+        {
+            cubes = new GameObject[,]
+            {
+                { Corner_OBY, Edge_BY, Corner_RBY},
+                { Edge_OB, Middle_B, Edge_RB},
+                { Corner_OBW, Edge_BW, Corner_RBW}
+            },
+            rotationAxis = Vector3.left
         };
 
-        GreenFace = new GameObject[3, 3] {
-            { Corner_RGY, Edge_GY, Corner_OGY},
-            { Edge_RG, Middle_G, Edge_OG},
-            { Corner_RGW, Edge_GW, Corner_OGW}
+        GreenFace = new CubeFace
+        {
+            cubes = new GameObject[,]
+            {
+                { Corner_RGY, Edge_GY, Corner_OGY},
+                { Edge_RG, Middle_G, Edge_OG},
+                { Corner_RGW, Edge_GW, Corner_OGW}
+            },
+            rotationAxis = Vector3.right
         };
 
-        OrangeFace = new GameObject[3, 3] {
-            { Corner_OGY, Edge_OY, Corner_OBY},
-            { Edge_OG, Middle_O, Edge_OB},
-            { Corner_OGW, Edge_OW, Corner_OBW}
+        OrangeFace = new CubeFace
+        {
+            cubes = new GameObject[,]
+            {
+                { Corner_OGY, Edge_OY, Corner_OBY},
+                { Edge_OG, Middle_O, Edge_OB},
+                { Corner_OGW, Edge_OW, Corner_OBW}
+            },
+            rotationAxis = Vector3.forward
         };
 
-        RedFace = new GameObject[3, 3] {
-            { Corner_RBY, Edge_RY, Corner_RGY},
-            { Edge_RB, Middle_R, Edge_RG},
-            { Corner_RBW, Edge_RW, Corner_RGW}
+        RedFace = new CubeFace
+        {
+            cubes = new GameObject[,]
+            {
+                { Corner_RBY, Edge_RY, Corner_RGY},
+                { Edge_RB, Middle_R, Edge_RG},
+                { Corner_RBW, Edge_RW, Corner_RGW}
+            },
+            rotationAxis = Vector3.back
         };
 
-        WhiteFace = new GameObject[3, 3] {
-            { Corner_RGW, Edge_GW, Corner_OGW},
-            { Edge_RW, Middle_W, Edge_OW},
-            { Corner_RBW, Edge_BW, Corner_OBW}
+        WhiteFace = new CubeFace
+        {
+            cubes = new GameObject[,]
+            {
+                { Corner_RGW, Edge_GW, Corner_OGW},
+                { Edge_RW, Middle_W, Edge_OW},
+                { Corner_RBW, Edge_BW, Corner_OBW}
+            },
+            rotationAxis = Vector3.down
         };
 
-        YellowFace = new GameObject[3, 3] {
-            { Corner_RBY, Edge_BY, Corner_OBY},
-            { Edge_RY, Middle_Y, Edge_OY},
-            { Corner_RGY, Edge_GY, Corner_OGY}
+        YellowFace = new CubeFace
+        {
+            cubes = new GameObject[,]
+            {
+                { Corner_RBY, Edge_BY, Corner_OBY},
+                { Edge_RY, Middle_Y, Edge_OY},
+                { Corner_RGY, Edge_GY, Corner_OGY}
+            },
+            rotationAxis = Vector3.up
         };
     }
 	
 	// Update is called once per frame
-	void Update ()
+	void Update()
     {
-        //Handle rotation inputs if no current rotations are happening
-        if (!isRotating)
+        //If a rotation is already occuring, simply continue rotating the appropriate face
+        if(isRotating)
         {
-            //Blue
+            RotateCubeFace();
+        }
+        //Otherwise, handle any potential rotation inputs
+        else if(RotationKeyWasPressed())
+        {
+            //Indicate that a rotation is now occuring
+            isRotating = true;
+            remainingRotationFrames = FRAMES_PER_ROTATION;
+
+            //If the shift key is pressed, the turn is counterclockwise. Otherwise, it is clockwise
+            rotationDirection = Input.GetKey(KeyCode.LeftShift) ? RotationDirection.Counterclockwise : RotationDirection.Clockwise;
+
+            //Blue Face Rotation
             if (Input.GetKeyDown(KeyCode.B))
             {
-                isRotating = true;
-                remainingRotationFrames = FRAMES_PER_ROTATION;
-                currentFace = Face.Blue;
-
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    currentRotation = Rotation.Counterclockwise;
-                }
-                else
-                {
-                    currentRotation = Rotation.Clockwise;
-                }
+                rotatingFace = BlueFace;
             }
-
-            //Green
-            if (Input.GetKeyDown(KeyCode.G))
+            //Green Face Rotation
+            else if (Input.GetKeyDown(KeyCode.G))
             {
-                isRotating = true;
-                remainingRotationFrames = FRAMES_PER_ROTATION;
-                currentFace = Face.Green;
-
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    currentRotation = Rotation.Counterclockwise;
-                }
-                else
-                {
-                    currentRotation = Rotation.Clockwise;
-                }
+                rotatingFace = GreenFace;
             }
-
-            //Orange
-            if (Input.GetKeyDown(KeyCode.O))
+            //Red Face Rotation
+            else if (Input.GetKeyDown(KeyCode.R))
             {
-                isRotating = true;
-                remainingRotationFrames = FRAMES_PER_ROTATION;
-                currentFace = Face.Orange;
-
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    currentRotation = Rotation.Counterclockwise;
-                }
-                else
-                {
-                    currentRotation = Rotation.Clockwise;
-                }
+                rotatingFace = RedFace;
             }
-
-            //Red
-            if (Input.GetKeyDown(KeyCode.R))
+            //Orange Face Rotation
+            else if (Input.GetKeyDown(KeyCode.O))
             {
-                isRotating = true;
-                remainingRotationFrames = FRAMES_PER_ROTATION;
-                currentFace = Face.Red;
-
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    currentRotation = Rotation.Counterclockwise;
-                }
-                else
-                {
-                    currentRotation = Rotation.Clockwise;
-                }
+                rotatingFace = OrangeFace;
             }
-
-            //White
-            if (Input.GetKeyDown(KeyCode.W))
+            //White Face Rotation
+            else if (Input.GetKeyDown(KeyCode.W))
             {
-                isRotating = true;
-                remainingRotationFrames = FRAMES_PER_ROTATION;
-                currentFace = Face.White;
-
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    currentRotation = Rotation.Counterclockwise;
-                }
-                else
-                {
-                    currentRotation = Rotation.Clockwise;
-                }
+                rotatingFace = WhiteFace;
             }
-
-            //Yellow
-            if (Input.GetKeyDown(KeyCode.Y))
+            //Yellow Face Rotation
+            else if (Input.GetKeyDown(KeyCode.Y))
             {
-                isRotating = true;
-                remainingRotationFrames = FRAMES_PER_ROTATION;
-                currentFace = Face.Yellow;
-
-                if(Input.GetKey(KeyCode.LeftShift))
-                {
-                    currentRotation = Rotation.Counterclockwise;
-                }
-                else
-                {
-                    currentRotation = Rotation.Clockwise;
-                }                
+                rotatingFace = YellowFace;
             }
-        }        
-
-        //Otherwise, continue the current rotation
-        else
-        {
-            Rotate(currentFace, currentRotation);
-        }        
+        }     
 	}
 
-    private void Rotate(Face face, Rotation rotationDirection)
+    private bool RotationKeyWasPressed()
     {
-        //Blue
-        if (face == Face.Blue)
+        return Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.R) ||
+            Input.GetKeyDown(KeyCode.O) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Y);
+    }
+
+    private void RotateCubeFace()
+    {
+        //Rotate all cubes associated with the rotating face around the appropriate axis
+        for (int i = 0; i < 3; i++)
         {
-            for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
             {
-                for (int j = 0; j < 3; j++)
-                {
-                    BlueFace[i, j].transform.RotateAround(Vector3.zero, Vector3.left, ROTATION_SPEED * (int)rotationDirection);
-                }
+                rotatingFace.cubes[i, j].transform.RotateAround(Vector3.zero, rotatingFace.rotationAxis, ROTATION_SPEED * (int)rotationDirection);
             }
-        }
+        }   
 
-        //Green
-        if (face == Face.Green)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    GreenFace[i, j].transform.RotateAround(Vector3.zero, Vector3.right, ROTATION_SPEED * (int)rotationDirection);
-                }
-            }
-        }
-
-        //Orange
-        if (face == Face.Orange)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    OrangeFace[i, j].transform.RotateAround(Vector3.zero, Vector3.forward, ROTATION_SPEED * (int)rotationDirection);
-                }
-            }
-        }
-
-        //Red
-        if (face == Face.Red)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    RedFace[i, j].transform.RotateAround(Vector3.zero, Vector3.back, ROTATION_SPEED * (int)rotationDirection);
-                }
-            }
-        }
-
-        //White
-        if (face == Face.White)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    WhiteFace[i, j].transform.RotateAround(Vector3.zero, Vector3.down, ROTATION_SPEED * (int)rotationDirection);
-                }
-            }
-        }
-
-        //Yellow
-        if (face == Face.Yellow)
-        {
-            for(int i = 0; i < 3; i++)
-            {
-                for(int j = 0; j < 3; j++)
-                {
-                    YellowFace[i, j].transform.RotateAround(Vector3.zero, Vector3.up, ROTATION_SPEED * (int)rotationDirection);
-                }
-            }            
-        }        
-
+        //Decrement the number of frames remaining to complete the rotation
         remainingRotationFrames--;
 
+        //If the rotation has completed, set the rotation flag to false to allow another rotation to begin
         if(remainingRotationFrames == 0)
         {
             isRotating = false;
