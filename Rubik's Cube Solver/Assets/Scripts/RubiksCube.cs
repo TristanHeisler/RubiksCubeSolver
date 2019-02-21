@@ -36,6 +36,9 @@ public class RubiksCube : MonoBehaviour
             if (remainingRotationFrames == 0)
             {
                 isRotating = false;
+
+                //Additionally, perform the appropriate cube face remappings
+                rubiksCube.HandleRotationRemapping();
             }
         }
         //Otherwise, handle any potential rotation inputs

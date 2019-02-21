@@ -6,7 +6,7 @@ namespace Rubiks
 {
     public class Cube : MonoBehaviour
     {
-        public const int ROTATION_SPEED = 10;
+        public const int ROTATION_SPEED = 15;
 
         //Objects to represent the physical cube in the game
         //8 Corner Cubes
@@ -158,33 +158,36 @@ namespace Rubiks
                 {
                     rotatingFace.cubes[i, j].transform.RotateAround(Vector3.zero, rotatingFace.rotationAxis, ROTATION_SPEED * (int)rotationDirection);
                 }
-            }
+            }          
+        }
 
+        public void HandleRotationRemapping()
+        {
             //Perform the correct remappings
             switch (rotatingFaceColor)
             {
                 case FaceColor.Blue:
-                    handleBlueRotation();
+                    handleBlueRotationRemapping();
                     break;
                 case FaceColor.Green:
-                    handleGreenRotation();
+                    handleGreenRotationRemapping();
                     break;
                 case FaceColor.Orange:
-                    handleOrangeRotation();
+                    handleOrangeRotationRemapping();
                     break;
                 case FaceColor.Red:
-                    handleRedRotation();
+                    handleRedRotationRemapping();
                     break;
                 case FaceColor.White:
-                    handleWhiteRotation();
+                    handleWhiteRotationRemapping();
                     break;
                 case FaceColor.Yellow:
-                    handleYellowRotation();
+                    handleYellowRotationRemapping();
                     break;
             }
         }
 
-        private void handleBlueRotation()
+        private void handleBlueRotationRemapping()
         {
             var tempCorner = blueFace.cubes[0, 0];
             var tempEdge = blueFace.cubes[0, 1];
@@ -219,7 +222,7 @@ namespace Rubiks
             }
         }
 
-        private void handleGreenRotation()
+        private void handleGreenRotationRemapping()
         {
             var tempCorner = greenFace.cubes[0, 0];
             var tempEdge = greenFace.cubes[0, 1];
@@ -254,7 +257,7 @@ namespace Rubiks
             }
         }
 
-        private void handleOrangeRotation()
+        private void handleOrangeRotationRemapping()
         {
             var tempCorner = orangeFace.cubes[0, 0];
             var tempEdge = orangeFace.cubes[0, 1];
@@ -289,7 +292,7 @@ namespace Rubiks
             }
         }
 
-        private void handleRedRotation()
+        private void handleRedRotationRemapping()
         {
             var tempCorner = redFace.cubes[0, 0];
             var tempEdge = redFace.cubes[0, 1];
@@ -324,7 +327,7 @@ namespace Rubiks
             }
         }
 
-        private void handleWhiteRotation()
+        private void handleWhiteRotationRemapping()
         {
             var tempCorner = whiteFace.cubes[0, 0];
             var tempEdge = whiteFace.cubes[0, 1];
@@ -359,7 +362,7 @@ namespace Rubiks
             }
         }
 
-        private void handleYellowRotation()
+        private void handleYellowRotationRemapping()
         {
             var tempCorner = yellowFace.cubes[0, 0];
             var tempEdge = yellowFace.cubes[0, 1];
