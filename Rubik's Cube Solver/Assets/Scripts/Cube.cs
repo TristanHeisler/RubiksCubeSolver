@@ -186,14 +186,107 @@ namespace Rubiks
 
         private void handleBlueRotation()
         {
+            var tempCorner = blueFace.cubes[0, 0];
+            var tempEdge = blueFace.cubes[0, 1];
+
+            if (rotationDirection == RotationDirection.Clockwise)
+            {
+                //Corners
+                setOBYCorner(blueFace.cubes[2, 0]);
+                setOBWCorner(blueFace.cubes[2, 2]);
+                setRBWCorner(blueFace.cubes[0, 2]);
+                setRBYCorner(tempCorner);
+
+                //Edges
+                setBYEdge(blueFace.cubes[1, 0]);
+                setOBEdge(blueFace.cubes[2, 1]);
+                setBWEdge(blueFace.cubes[1, 2]);
+                setRBEdge(tempEdge);
+            }
+            else
+            {
+                //Corners
+                setOBYCorner(blueFace.cubes[0, 2]);
+                setRBYCorner(blueFace.cubes[2, 2]);
+                setRBWCorner(blueFace.cubes[2, 0]);
+                setOBWCorner(tempCorner);
+
+                //Edges
+                setBYEdge(blueFace.cubes[1, 2]);
+                setRBEdge(blueFace.cubes[2, 1]);
+                setBWEdge(blueFace.cubes[1, 0]);
+                setOBEdge(tempEdge);
+            }
         }
 
         private void handleGreenRotation()
         {
+            var tempCorner = greenFace.cubes[0, 0];
+            var tempEdge = greenFace.cubes[0, 1];
+
+            if (rotationDirection == RotationDirection.Clockwise)
+            {
+                //Corners
+                setRGYCorner(greenFace.cubes[2, 0]);
+                setRGWCorner(greenFace.cubes[2, 2]);
+                setOGWCorner(greenFace.cubes[0, 2]);
+                setOGYCorner(tempCorner);
+
+                //Edges
+                setGYEdge(greenFace.cubes[1, 0]);
+                setRGEdge(greenFace.cubes[2, 1]);
+                setGWEdge(greenFace.cubes[1, 2]);
+                setOGEdge(tempEdge);
+            }
+            else
+            {
+                //Corners
+                setRGYCorner(greenFace.cubes[0, 2]);
+                setOGYCorner(greenFace.cubes[2, 2]);
+                setOGWCorner(greenFace.cubes[2, 0]);
+                setRGWCorner(tempCorner);
+
+                //Edges
+                setGYEdge(greenFace.cubes[1, 2]);
+                setOGEdge(greenFace.cubes[2, 1]);
+                setGWEdge(greenFace.cubes[1, 0]);
+                setRGEdge(tempEdge);
+            }
         }
 
         private void handleOrangeRotation()
         {
+            var tempCorner = orangeFace.cubes[0, 0];
+            var tempEdge = orangeFace.cubes[0, 1];
+
+            if (rotationDirection == RotationDirection.Clockwise)
+            {
+                //Corners
+                setOGYCorner(orangeFace.cubes[2, 0]);
+                setOGWCorner(orangeFace.cubes[2, 2]);
+                setOBWCorner(orangeFace.cubes[0, 2]);
+                setOBYCorner(tempCorner);
+
+                //Edges
+                setOYEdge(orangeFace.cubes[1, 0]);
+                setOGEdge(orangeFace.cubes[2, 1]);
+                setOWEdge(orangeFace.cubes[1, 2]);
+                setOBEdge(tempEdge);
+            }
+            else
+            {
+                //Corners
+                setOGYCorner(orangeFace.cubes[0, 2]);
+                setOBYCorner(orangeFace.cubes[2, 2]);
+                setOBWCorner(orangeFace.cubes[2, 0]);
+                setOGWCorner(tempCorner);
+
+                //Edges
+                setOYEdge(orangeFace.cubes[1, 2]);
+                setOBEdge(orangeFace.cubes[2, 1]);
+                setOWEdge(orangeFace.cubes[1, 0]);
+                setOGEdge(tempEdge);
+            }
         }
 
         private void handleRedRotation()
@@ -204,41 +297,201 @@ namespace Rubiks
             if (rotationDirection == RotationDirection.Clockwise)
             {
                 //Corners
-                redFace.cubes[0, 0] = blueFace.cubes[0, 2] = yellowFace.cubes[2, 0] = redFace.cubes[2, 0];
-                redFace.cubes[2, 0] = blueFace.cubes[2, 2] = whiteFace.cubes[0, 0] = redFace.cubes[2, 2];
-                redFace.cubes[2, 2] = greenFace.cubes[2, 0] = whiteFace.cubes[0, 2] = redFace.cubes[0, 2];
-                redFace.cubes[0, 2] = greenFace.cubes[0, 0] = yellowFace.cubes[2, 2] = tempCorner;
+                setRBYCorner(redFace.cubes[2, 0]);
+                setRBWCorner(redFace.cubes[2, 2]);
+                setRGWCorner(redFace.cubes[0, 2]);
+                setRGYCorner(tempCorner);
 
                 //Edges
-                redFace.cubes[0, 1] = yellowFace.cubes[2, 1] = redFace.cubes[1, 0];
-                redFace.cubes[1, 0] = blueFace.cubes[1, 2] = redFace.cubes[2, 1];
-                redFace.cubes[2, 1] = whiteFace.cubes[0, 1] = redFace.cubes[1, 2];
-                redFace.cubes[1, 2] = greenFace.cubes[1, 0] = tempEdge;
+                setRYEdge(redFace.cubes[1, 0]);
+                setRBEdge(redFace.cubes[2, 1]);
+                setRWEdge(redFace.cubes[1, 2]);
+                setRGEdge(tempEdge);
             }
             else
             {
                 //Corners
-                redFace.cubes[0, 0] = blueFace.cubes[0, 2] = yellowFace.cubes[2, 0] = redFace.cubes[0, 2];
-                redFace.cubes[0, 2] = greenFace.cubes[0, 0] = yellowFace.cubes[2, 2] = redFace.cubes[2, 2];
-                redFace.cubes[2, 2] = greenFace.cubes[2, 0] = whiteFace.cubes[0, 2] = redFace.cubes[2, 0];
-                redFace.cubes[2, 0] = blueFace.cubes[2, 2] = whiteFace.cubes[0, 0] = tempCorner;
+                setRBYCorner(redFace.cubes[0, 2]);
+                setRGYCorner(redFace.cubes[2, 2]);
+                setRGWCorner(redFace.cubes[2, 0]);
+                setRBWCorner(tempCorner);
 
-                //Edges
-                redFace.cubes[0, 1] = yellowFace.cubes[2, 1] = redFace.cubes[1, 2];
-                redFace.cubes[1, 2] = greenFace.cubes[1, 0] = redFace.cubes[2, 1];
-                redFace.cubes[2, 1] = whiteFace.cubes[0, 1] = redFace.cubes[1, 0];
-                redFace.cubes[1, 0] = blueFace.cubes[1, 2] = tempEdge;
+                //Edges               
+                setRYEdge(redFace.cubes[1, 2]);
+                setRGEdge(redFace.cubes[2, 1]);
+                setRWEdge(redFace.cubes[1, 0]);
+                setRBEdge(tempEdge);
             }
         }
 
         private void handleWhiteRotation()
         {
+            var tempCorner = whiteFace.cubes[0, 0];
+            var tempEdge = whiteFace.cubes[0, 1];
+
+            if (rotationDirection == RotationDirection.Clockwise)
+            {
+                //Corners
+                setRBWCorner(whiteFace.cubes[2, 0]);
+                setOBWCorner(whiteFace.cubes[2, 2]);
+                setOGWCorner(whiteFace.cubes[0, 2]);
+                setRGWCorner(tempCorner);
+
+                //Edges
+                setRWEdge(whiteFace.cubes[1, 0]);
+                setBWEdge(whiteFace.cubes[2, 1]);
+                setOWEdge(whiteFace.cubes[1, 2]);
+                setGWEdge(tempEdge);
+            }
+            else
+            {
+                //Corners
+                setRBWCorner(whiteFace.cubes[0, 2]);
+                setRGWCorner(whiteFace.cubes[2, 2]);
+                setOGWCorner(whiteFace.cubes[2, 0]);
+                setOBWCorner(tempCorner);
+
+                //Edges
+                setRWEdge(whiteFace.cubes[1, 2]);
+                setGWEdge(whiteFace.cubes[2, 1]);
+                setOWEdge(whiteFace.cubes[1, 0]);
+                setBWEdge(tempEdge);
+            }
         }
 
         private void handleYellowRotation()
         {
+            var tempCorner = yellowFace.cubes[0, 0];
+            var tempEdge = yellowFace.cubes[0, 1];
+
+            if (rotationDirection == RotationDirection.Clockwise)
+            {
+                //Corners
+                setOBYCorner(yellowFace.cubes[2, 0]);
+                setRBYCorner(yellowFace.cubes[2, 2]);
+                setRGYCorner(yellowFace.cubes[0, 2]);
+                setOGYCorner(tempCorner);
+
+                //Edges
+                setOYEdge(yellowFace.cubes[1, 0]);
+                setBYEdge(yellowFace.cubes[2, 1]);
+                setRYEdge(yellowFace.cubes[1, 2]);
+                setGYEdge(tempEdge);
+            }
+            else
+            {
+                //Corners
+                setOBYCorner(yellowFace.cubes[0, 2]);
+                setOGYCorner(yellowFace.cubes[2, 2]);
+                setRGYCorner(yellowFace.cubes[2, 0]);
+                setRBYCorner(tempCorner);
+
+                //Edges
+                setOYEdge(yellowFace.cubes[1, 2]);
+                setGYEdge(yellowFace.cubes[2, 1]);
+                setRYEdge(yellowFace.cubes[1, 0]);
+                setBYEdge(tempEdge);
+            }
         }
 
-        
+        private void setOBWCorner(GameObject corner)
+        {
+            orangeFace.cubes[2, 2] = blueFace.cubes[2, 0] = whiteFace.cubes[2, 0] = corner;
+        }
+
+        private void setOBYCorner(GameObject corner)
+        {
+            orangeFace.cubes[0, 2] = blueFace.cubes[0, 0] = yellowFace.cubes[0, 0] = corner;
+        }
+
+        private void setOGWCorner(GameObject corner)
+        {
+            orangeFace.cubes[2, 0] = greenFace.cubes[2, 2] = whiteFace.cubes[2, 2] = corner;          
+        }
+
+        private void setOGYCorner(GameObject corner)
+        {
+            orangeFace.cubes[0, 0] = greenFace.cubes[0, 2] = yellowFace.cubes[0, 2] = corner;
+        }
+
+        private void setRBWCorner(GameObject corner)
+        {
+            redFace.cubes[2, 0] = blueFace.cubes[2, 2] = whiteFace.cubes[0, 0] = corner;
+        }
+
+        private void setRBYCorner(GameObject corner)
+        {
+            redFace.cubes[0, 0] = blueFace.cubes[0, 2] = yellowFace.cubes[2, 0] = corner;
+        }
+
+        private void setRGWCorner(GameObject corner)
+        {
+            redFace.cubes[2, 2] = greenFace.cubes[2, 0] = whiteFace.cubes[0, 2] = corner;
+        }
+
+        private void setRGYCorner(GameObject corner)
+        {
+            redFace.cubes[0, 2] = greenFace.cubes[0, 0] = yellowFace.cubes[2, 2] = corner;
+        }
+
+        private void setBWEdge(GameObject edge)
+        {
+            blueFace.cubes[2, 1] = whiteFace.cubes[1, 0] = edge;
+        }
+
+        private void setBYEdge(GameObject edge)
+        {
+            blueFace.cubes[0, 1] = yellowFace.cubes[1, 0] = edge;
+        }
+
+        private void setGWEdge(GameObject edge)
+        {
+            greenFace.cubes[2, 1] = whiteFace.cubes[1, 2] = edge;
+        }
+
+        private void setGYEdge(GameObject edge)
+        {
+            greenFace.cubes[0, 1] = yellowFace.cubes[1, 2] = edge;
+        }
+
+        private void setOBEdge(GameObject edge)
+        {
+            orangeFace.cubes[1, 2] = blueFace.cubes[1, 0] = edge;
+        }
+
+        private void setOGEdge(GameObject edge)
+        {
+            orangeFace.cubes[1, 0] = greenFace.cubes[1, 2] = edge;
+        }
+
+        private void setOWEdge(GameObject edge)
+        {
+            orangeFace.cubes[2, 1] = whiteFace.cubes[2, 1] = edge;
+        }
+
+        private void setOYEdge(GameObject edge)
+        {
+            orangeFace.cubes[0, 1] = yellowFace.cubes[0, 1] = edge;
+        }
+
+        private void setRBEdge(GameObject edge)
+        {
+            redFace.cubes[1, 0] = blueFace.cubes[1, 2] = edge;
+        }
+
+        private void setRGEdge(GameObject edge)
+        {
+            redFace.cubes[1, 2] = greenFace.cubes[1, 0] = edge;
+        }
+
+        private void setRWEdge(GameObject edge)
+        {
+            redFace.cubes[2, 1] = whiteFace.cubes[0, 1] = edge;
+        }
+
+        private void setRYEdge(GameObject edge)
+        {
+            redFace.cubes[0, 1] = yellowFace.cubes[2, 1] = edge;
+        }
     }
 }
