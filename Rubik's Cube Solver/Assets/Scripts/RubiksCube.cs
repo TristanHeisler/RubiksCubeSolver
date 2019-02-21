@@ -52,7 +52,6 @@ public class RubiksCube : MonoBehaviour
             //Blue Face Rotation
             if (Input.GetKeyDown(KeyCode.B))
             {
-                Debug.Log("Blue");
                 rubiksCube.SetRotatingFace(FaceColor.Blue);
             }
             //Green Face Rotation

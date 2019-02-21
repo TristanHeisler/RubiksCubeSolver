@@ -44,6 +44,7 @@ namespace Rubiks
         //Objects to represent the current state of each cube face
         private Face blueFace, greenFace, orangeFace, redFace, whiteFace, yellowFace;
 
+        private FaceColor rotatingFaceColor;
         private Face rotatingFace;
         private RotationDirection rotationDirection;
 
@@ -97,9 +98,9 @@ namespace Rubiks
             {
                 cubes = new GameObject[,]
                 {
-                    { Corner_RGW, Edge_GW, Corner_OGW},
-                    { Edge_RW, Middle_W, Edge_OW},
-                    { Corner_RBW, Edge_BW, Corner_OBW}
+                    { Corner_RBW, Edge_RW, Corner_RGW},
+                    { Edge_BW, Middle_W, Edge_GW},
+                    { Corner_OBW, Edge_OW, Corner_OGW}
                 },
                 rotationAxis = Vector3.down
             };
@@ -108,9 +109,9 @@ namespace Rubiks
             {
                 cubes = new GameObject[,]
                 {
-                    { Corner_RBY, Edge_BY, Corner_OBY},
-                    { Edge_RY, Middle_Y, Edge_OY},
-                    { Corner_RGY, Edge_GY, Corner_OGY}
+                    { Corner_OBY, Edge_OY, Corner_OGY},
+                    { Edge_BY, Middle_Y, Edge_GY},
+                    { Corner_RBY, Edge_RY, Corner_RGY}
                 },
                 rotationAxis = Vector3.up
             };
@@ -121,9 +122,11 @@ namespace Rubiks
             rotationDirection = direction;
         }
 
-        public void SetRotatingFace(FaceColor rotatingFaceColor)
+        public void SetRotatingFace(FaceColor faceColor)
         {
-            switch(rotatingFaceColor)
+            rotatingFaceColor = faceColor;
+
+            switch(faceColor)
             {
                 case FaceColor.Blue:
                     rotatingFace = blueFace;
@@ -131,12 +134,12 @@ namespace Rubiks
                 case FaceColor.Green:
                     rotatingFace = greenFace;
                     break;
-                case FaceColor.Red:
-                    rotatingFace = redFace;
-                    break;
                 case FaceColor.Orange:
                     rotatingFace = orangeFace;
                     break;
+                case FaceColor.Red:
+                    rotatingFace = redFace;
+                    break;                
                 case FaceColor.White:
                     rotatingFace = whiteFace;
                     break;
@@ -145,7 +148,6 @@ namespace Rubiks
                     break;
             }
         }
-
 
         public void RotateCubeFace()
         {
@@ -157,6 +159,86 @@ namespace Rubiks
                     rotatingFace.cubes[i, j].transform.RotateAround(Vector3.zero, rotatingFace.rotationAxis, ROTATION_SPEED * (int)rotationDirection);
                 }
             }
+
+            //Perform the correct remappings
+            switch (rotatingFaceColor)
+            {
+                case FaceColor.Blue:
+                    handleBlueRotation();
+                    break;
+                case FaceColor.Green:
+                    handleGreenRotation();
+                    break;
+                case FaceColor.Orange:
+                    handleOrangeRotation();
+                    break;
+                case FaceColor.Red:
+                    handleRedRotation();
+                    break;
+                case FaceColor.White:
+                    handleWhiteRotation();
+                    break;
+                case FaceColor.Yellow:
+                    handleYellowRotation();
+                    break;
+            }
         }
+
+        private void handleBlueRotation()
+        {
+        }
+
+        private void handleGreenRotation()
+        {
+        }
+
+        private void handleOrangeRotation()
+        {
+        }
+
+        private void handleRedRotation()
+        {
+            var tempCorner = redFace.cubes[0, 0];
+            var tempEdge = redFace.cubes[0, 1];
+
+            if (rotationDirection == RotationDirection.Clockwise)
+            {
+                //Corners
+                redFace.cubes[0, 0] = blueFace.cubes[0, 2] = yellowFace.cubes[2, 0] = redFace.cubes[2, 0];
+                redFace.cubes[2, 0] = blueFace.cubes[2, 2] = whiteFace.cubes[0, 0] = redFace.cubes[2, 2];
+                redFace.cubes[2, 2] = greenFace.cubes[2, 0] = whiteFace.cubes[0, 2] = redFace.cubes[0, 2];
+                redFace.cubes[0, 2] = greenFace.cubes[0, 0] = yellowFace.cubes[2, 2] = tempCorner;
+
+                //Edges
+                redFace.cubes[0, 1] = yellowFace.cubes[2, 1] = redFace.cubes[1, 0];
+                redFace.cubes[1, 0] = blueFace.cubes[1, 2] = redFace.cubes[2, 1];
+                redFace.cubes[2, 1] = whiteFace.cubes[0, 1] = redFace.cubes[1, 2];
+                redFace.cubes[1, 2] = greenFace.cubes[1, 0] = tempEdge;
+            }
+            else
+            {
+                //Corners
+                redFace.cubes[0, 0] = blueFace.cubes[0, 2] = yellowFace.cubes[2, 0] = redFace.cubes[0, 2];
+                redFace.cubes[0, 2] = greenFace.cubes[0, 0] = yellowFace.cubes[2, 2] = redFace.cubes[2, 2];
+                redFace.cubes[2, 2] = greenFace.cubes[2, 0] = whiteFace.cubes[0, 2] = redFace.cubes[2, 0];
+                redFace.cubes[2, 0] = blueFace.cubes[2, 2] = whiteFace.cubes[0, 0] = tempCorner;
+
+                //Edges
+                redFace.cubes[0, 1] = yellowFace.cubes[2, 1] = redFace.cubes[1, 2];
+                redFace.cubes[1, 2] = greenFace.cubes[1, 0] = redFace.cubes[2, 1];
+                redFace.cubes[2, 1] = whiteFace.cubes[0, 1] = redFace.cubes[1, 0];
+                redFace.cubes[1, 0] = blueFace.cubes[1, 2] = tempEdge;
+            }
+        }
+
+        private void handleWhiteRotation()
+        {
+        }
+
+        private void handleYellowRotation()
+        {
+        }
+
+        
     }
 }
