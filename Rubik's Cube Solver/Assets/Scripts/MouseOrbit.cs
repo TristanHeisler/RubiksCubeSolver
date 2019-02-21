@@ -12,7 +12,7 @@ public class MouseOrbit : MonoBehaviour
     private float yMaxAngle = 45f;
     private float yMinAngle = -45f;
 
-    private float distance = 8.0f;
+    private float distance = 8.15f;
     private float speed = 10.0f;
 
     void Start()
