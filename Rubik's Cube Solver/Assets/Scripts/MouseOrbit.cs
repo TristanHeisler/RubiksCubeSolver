@@ -2,7 +2,6 @@
 
 using UnityEngine;
 
-[AddComponentMenu("Camera-Control/Mouse Orbit with zoom")]
 public class MouseOrbit : MonoBehaviour
 {
     public Transform target;
@@ -29,7 +28,7 @@ public class MouseOrbit : MonoBehaviour
         {
             xAngle += Input.GetAxis("Mouse X") * speed;
             yAngle -= Input.GetAxis("Mouse Y") * speed;
-            yAngle = ClampAngle(yAngle, yMinAngle, yMaxAngle);
+            yAngle = Mathf.Clamp(yAngle, yMinAngle, yMaxAngle);
 
             Quaternion rotation = Quaternion.Euler(yAngle, xAngle, 0);
 
@@ -39,14 +38,5 @@ public class MouseOrbit : MonoBehaviour
             transform.rotation = rotation;
             transform.position = position;
         }
-    }
-
-    public static float ClampAngle(float angle, float min, float max)
-    {
-        if (angle < -360F)
-            angle += 360F;
-        if (angle > 360F)
-            angle -= 360F;
-        return Mathf.Clamp(angle, min, max);
     }
 }
