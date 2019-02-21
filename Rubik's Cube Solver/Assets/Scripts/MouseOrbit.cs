@@ -1,0 +1,52 @@
+﻿//Code taken and modified from http://wiki.unity3d.com/index.php?title=MouseOrbitImproved
+
+using UnityEngine;
+
+[AddComponentMenu("Camera-Control/Mouse Orbit with zoom")]
+public class MouseOrbit : MonoBehaviour
+{
+    public Transform target;
+
+    private float xAngle = 0.0f;
+    private float yAngle = 0.0f;
+
+    private float yMaxAngle = 45f;
+    private float yMinAngle = -45f;
+
+    private float distance = 8.0f;
+    private float speed = 10.0f;
+
+    void Start()
+    {
+        Vector3 angles = transform.eulerAngles;
+        xAngle = angles.y;
+        yAngle = angles.x;
+    }
+
+    void LateUpdate()
+    {
+        if (target && Input.GetMouseButton(0))
+        {
+            xAngle += Input.GetAxis("Mouse X") * speed;
+            yAngle -= Input.GetAxis("Mouse Y") * speed;
+            yAngle = ClampAngle(yAngle, yMinAngle, yMaxAngle);
+
+            Quaternion rotation = Quaternion.Euler(yAngle, xAngle, 0);
+
+            Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
+            Vector3 position = rotation * negDistance + target.position;
+
+            transform.rotation = rotation;
+            transform.position = position;
+        }
+    }
+
+    public static float ClampAngle(float angle, float min, float max)
+    {
+        if (angle < -360F)
+            angle += 360F;
+        if (angle > 360F)
+            angle -= 360F;
+        return Mathf.Clamp(angle, min, max);
+    }
+}

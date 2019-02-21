@@ -17,7 +17,7 @@ public class RubiksCube : MonoBehaviour
     void Start()
     {
         rubiksCube = GetComponent<Cube>();
-        rubiksCube.InitializeFaces();        
+        rubiksCube.InitializeFaces();
     }
 	
 	// Update is called once per frame
