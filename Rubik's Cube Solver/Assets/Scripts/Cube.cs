@@ -44,6 +44,7 @@ namespace Rubiks
         //Objects to represent the current state of each cube face
         private Face blueFace, greenFace, orangeFace, redFace, whiteFace, yellowFace;
 
+        //Variables for rotating the cube faces
         private FaceColor rotatingFaceColor;
         private Face rotatingFace;
         private RotationDirection rotationDirection;
@@ -115,6 +116,64 @@ namespace Rubiks
                 },
                 rotationAxis = Vector3.up
             };
+        }
+
+        public bool IsSolved()
+        {
+            return
+                //Ensure that the 8 corner cubes are in the correct location
+                blueFace.cubes[0, 0] == Corner_OBY
+                && blueFace.cubes[0, 2] == Corner_RBY
+                && blueFace.cubes[2, 2] == Corner_RBW
+                && blueFace.cubes[2, 0] == Corner_OBW
+                && greenFace.cubes[0, 0] == Corner_RGY
+                && greenFace.cubes[0, 2] == Corner_OGY
+                && greenFace.cubes[2, 2] == Corner_OGW
+                && greenFace.cubes[2, 0] == Corner_RGW
+
+                //Ensure that the 12 corner cubes are in the correct location
+                && blueFace.cubes[0, 1] == Edge_BY
+                && blueFace.cubes[1, 2] == Edge_RB
+                && blueFace.cubes[2, 1] == Edge_BW
+                && blueFace.cubes[1, 0] == Edge_OB
+                && greenFace.cubes[0, 1] == Edge_GY
+                && greenFace.cubes[1, 2] == Edge_OG
+                && greenFace.cubes[2, 1] == Edge_GW
+                && greenFace.cubes[1, 0] == Edge_RG
+                && redFace.cubes[0, 1] == Edge_RY
+                && redFace.cubes[2, 1] == Edge_RW
+                && orangeFace.cubes[0, 1] == Edge_OY
+                && orangeFace.cubes[2, 1] == Edge_OW;
+        }
+
+        public GameObject[,] GetBlueFaceCubes()
+        {
+            return blueFace.cubes;
+        }
+
+        public GameObject[,] GetGreenFaceCubes()
+        {
+            return greenFace.cubes;
+        }
+
+        public GameObject[,] GetOrangeFaceCubes()
+        {
+            return orangeFace.cubes;
+        }
+
+        public GameObject[,] GetRedFaceCubes()
+        {
+            return redFace.cubes;
+        }
+
+        public GameObject[,] GetYellowFaceCubes()
+        {
+            return yellowFace.cubes;
+        }
+
+        public GameObject[,] GetWhiteFaceCubes()
+        {
+            return whiteFace.cubes;
         }
 
         public void SetRotationDirection(RotationDirection direction)

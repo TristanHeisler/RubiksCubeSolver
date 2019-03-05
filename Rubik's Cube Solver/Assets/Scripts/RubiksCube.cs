@@ -2,16 +2,21 @@
 using Rubiks.Enums;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RubiksCube : MonoBehaviour
 {
+    //Constants
     private const int FRAMES_PER_ROTATION = 90 / Cube.ROTATION_SPEED;
     private const int ROTATIONS_PER_SCRAMBLE = 50;
+
+    //User interface elements
+    public Text AlertText;
 
     //The cube to be manipulated
     private Cube rubiksCube;
 
-    //Variables concerning cube face rotation and cube interaction
+    //Variables for rotating cube faces
     private bool isRotating = false;
     private int remainingRotationFrames;
 
@@ -19,12 +24,17 @@ public class RubiksCube : MonoBehaviour
     private bool isScrambling = false;
     Queue<Rotation> randomRotations;
 
+    //Variables for solving the cube
+    private bool isSolving = false;
+    Queue<Rotation> solveRotations;
+
     // Use this for initialization
     void Start()
     {
         rubiksCube = GetComponent<Cube>();
         rubiksCube.InitializeFaces();
         randomRotations = new Queue<Rotation>();
+        solveRotations = new Queue<Rotation>();
     }
 	
 	// Update is called once per frame
@@ -48,7 +58,13 @@ public class RubiksCube : MonoBehaviour
 
                     //Additionally, perform the appropriate cube face remappings
                     rubiksCube.HandleRotationRemapping();
-                }
+
+                    //Display a message if the user solved the cube
+                    if (rubiksCube.IsSolved())
+                    {
+                        AlertText.text = "You solved the Rubik's Cube!";
+                    }
+                }     
             }
             else if (isScrambling)
             {
@@ -72,10 +88,42 @@ public class RubiksCube : MonoBehaviour
                 {
                     rubiksCube.HandleRotationRemapping();
 
-                    //If the scramble has completed, set the scrambling flag to false to allow cube interaction
+                    //If the rotations have completed, set the scrambling flag to false to allow cube interaction
                     if (randomRotations.Count == 0)
                     {
                         isScrambling = false;
+                    }
+                }
+            }
+            else if(isSolving)
+            {
+                //Retrieve the next element from the queue of solving rotations if needed
+                if (remainingRotationFrames == 0)
+                {
+                    Rotation nextRotation = solveRotations.Dequeue();
+                    rubiksCube.SetRotatingFace(nextRotation.FaceColor);
+                    rubiksCube.SetRotationDirection(nextRotation.Direction);
+                    remainingRotationFrames = FRAMES_PER_ROTATION;
+                }
+
+                //Continue rotating
+                rubiksCube.GetComponent<Cube>().RotateCubeFace();
+
+                //Decrement the number of frames remaining to complete the rotation
+                remainingRotationFrames--;
+
+                //If the current rotation has completed, handle the remapping
+                if (remainingRotationFrames == 0)
+                {
+                    rubiksCube.HandleRotationRemapping();
+
+                    //If the rotations have completed, set the scrambling flag to false to allow cube interaction
+                    if (solveRotations.Count == 0)
+                    {
+                        isSolving = false;
+
+                        //Additionally, ensure that the cube has actually been solved
+                        AlertText.text = rubiksCube.IsSolved() ? "The Rubik's Cube has been solved!" : "There was an error solving the Rubik's Cube";
                     }
                 }
             }
@@ -83,6 +131,9 @@ public class RubiksCube : MonoBehaviour
         //Otherwise, handle any potential rotation inputs
         else if(rotationKeyWasPressed())
         {
+            //Reset the alert text
+            AlertText.text = "";
+
             //Indicate that a rotation is now occuring
             isRotating = true;
             remainingRotationFrames = FRAMES_PER_ROTATION;
@@ -132,6 +183,9 @@ public class RubiksCube : MonoBehaviour
 
     public void ScrambleCube()
     {
+        //Reset the alert text
+        AlertText.text = "";
+
         isScrambling = true;
 
         for (int i = 0; i < ROTATIONS_PER_SCRAMBLE; i++)
@@ -149,8 +203,34 @@ public class RubiksCube : MonoBehaviour
         remainingRotationFrames = 0;
     }
 
+    public void HumanSolve()
+    {
+        //Reset the alert text
+        AlertText.text = "";
+
+        if (rubiksCube.GetBlueFaceCubes()[0, 1] == rubiksCube.Edge_RB)
+        {
+            isSolving = true;
+            solveRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+            remainingRotationFrames = 0;
+        }
+        if (rubiksCube.GetBlueFaceCubes()[2, 1] == rubiksCube.Edge_RB)
+        {
+            isSolving = true;
+            solveRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise));
+            remainingRotationFrames = 0;
+        }
+        if (rubiksCube.GetBlueFaceCubes()[1, 0] == rubiksCube.Edge_RB)
+        {
+            isSolving = true;
+            solveRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+            solveRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+            remainingRotationFrames = 0;
+        }
+    }
+
     private bool cubeIsInUse()
     {
-        return isRotating || isScrambling;
+        return isRotating || isScrambling || isSolving;
     }
 }
