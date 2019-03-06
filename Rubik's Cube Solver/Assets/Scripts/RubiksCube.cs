@@ -95,8 +95,6 @@ public class RubiksCube : MonoBehaviour
                     if (randomRotations.Count == 0)
                     {
                         isScrambling = false;
-
-                        rubiksCube.GetState().PrintCubeState();
                     }
                 }
             }

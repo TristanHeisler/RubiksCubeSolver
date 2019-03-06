@@ -226,12 +226,14 @@ namespace Rubiks
 
         public void RotateCubeFace()
         {
+            int rotationDegrees = (rotationDirection == RotationDirection.Clockwise) ? ROTATION_SPEED : -ROTATION_SPEED;
+
             //Rotate all cubes associated with the rotating face around the appropriate axis
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    rotatingFace.cubes[i, j].transform.RotateAround(Vector3.zero, rotatingFace.rotationAxis, ROTATION_SPEED * (int)rotationDirection);
+                    rotatingFace.cubes[i, j].transform.RotateAround(Vector3.zero, rotatingFace.rotationAxis, rotationDegrees);
                 }
             }          
         }

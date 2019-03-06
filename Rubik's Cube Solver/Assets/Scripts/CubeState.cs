@@ -5,34 +5,34 @@ namespace Rubiks
 {
     public class CubeState
     {
-        public const int NUMBER_OF_FACES = 6;
-        public const int CUBITS_PER_FACE = 8;
+        public const byte NUMBER_OF_FACES = 6;
+        public const byte CUBITS_PER_FACE = 8;
 
-        private const int BLUE = (int)FaceColor.Blue;
-        private const int GREEN = (int)FaceColor.Green;
-        private const int ORANGE = (int)FaceColor.Orange;
-        private const int RED = (int)FaceColor.Red;
-        private const int WHITE = (int)FaceColor.White;
-        private const int YELLOW = (int)FaceColor.Yellow;
+        private const byte BLUE = (byte)FaceColor.Blue;
+        private const byte GREEN = (byte)FaceColor.Green;
+        private const byte ORANGE = (byte)FaceColor.Orange;
+        private const byte RED = (byte)FaceColor.Red;
+        private const byte WHITE = (byte)FaceColor.White;
+        private const byte YELLOW = (byte)FaceColor.Yellow;
 
-        private const int TOP_LEFT = 0;
-        private const int TOP = 1;
-        private const int TOP_RIGHT = 2;
-        private const int RIGHT = 3;
-        private const int BOTTOM_RIGHT = 4;
-        private const int BOTTOM = 5;
-        private const int BOTTOM_LEFT = 6;
-        private const int LEFT = 7;
+        private const byte TOP_LEFT = 0;
+        private const byte TOP = 1;
+        private const byte TOP_RIGHT = 2;
+        private const byte RIGHT = 3;
+        private const byte BOTTOM_RIGHT = 4;
+        private const byte BOTTOM = 5;
+        private const byte BOTTOM_LEFT = 6;
+        private const byte LEFT = 7;
 
         private FaceColor[][] squares = new FaceColor[NUMBER_OF_FACES][];
 
         public CubeState()
         {
-            for(int currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
+            for(byte currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
             {
                 squares[currentFace] = new FaceColor[CUBITS_PER_FACE];
 
-                for(int currentSquare = 0; currentSquare < CUBITS_PER_FACE; currentSquare++)
+                for(byte currentSquare = 0; currentSquare < CUBITS_PER_FACE; currentSquare++)
                 {
                     squares[currentFace][currentSquare] = (FaceColor)currentFace;
                 }
@@ -70,7 +70,7 @@ namespace Rubiks
 
         private void rotateFace(FaceColor rotatingFace, RotationDirection direction)
         {
-            FaceColor[] face = squares[(int)rotatingFace];
+            FaceColor[] face = squares[(byte)rotatingFace];
 
             FaceColor tempCorner = face[0];
             FaceColor tempEdge = face[1];
@@ -395,7 +395,7 @@ namespace Rubiks
 
         public void PrintCubeState()
         {
-            for (int currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
+            for (byte currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
             {
                 var faceSquares = squares[currentFace];
 

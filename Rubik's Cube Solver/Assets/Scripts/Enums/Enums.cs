@@ -1,6 +1,6 @@
 ﻿namespace Rubiks.Enums
 {
-    public enum FaceColor
+    public enum FaceColor : byte
     {
         Blue,
         Green,
@@ -10,9 +10,9 @@
         Yellow
     }
 
-    public enum RotationDirection
+    public enum RotationDirection : byte
     {
-        Clockwise = 1,
-        Counterclockwise = -1
+        Clockwise,
+        Counterclockwise
     } 
 }
