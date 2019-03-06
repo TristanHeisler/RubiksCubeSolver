@@ -1,5 +1,6 @@
 ﻿using Rubiks;
 using Rubiks.Enums;
+using Rubiks.Solvers;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,11 +29,12 @@ public class RubiksCube : MonoBehaviour
     private bool isSolving = false;
     Queue<Rotation> solveRotations;
 
-    // Use this for initialization
+    //Initialization
     void Start()
     {
         rubiksCube = GetComponent<Cube>();
-        rubiksCube.InitializeFaces();
+        rubiksCube.Initialize();
+
         randomRotations = new Queue<Rotation>();
         solveRotations = new Queue<Rotation>();
     }
@@ -123,7 +125,7 @@ public class RubiksCube : MonoBehaviour
                         isSolving = false;
 
                         //Additionally, ensure that the cube has actually been solved
-                        AlertText.text = rubiksCube.IsSolved() ? "The Rubik's Cube has been solved!" : "There was an error solving the Rubik's Cube";
+                        AlertText.text = rubiksCube.IsSolved() ? "The Rubik's Cube has been solved!" : "The Rubik's Cube was not successfully solved.";
                     }
                 }
             }
@@ -131,6 +133,9 @@ public class RubiksCube : MonoBehaviour
         //Otherwise, handle any potential rotation inputs
         else if(rotationKeyWasPressed())
         {
+            RotationDirection rotationDirection;
+            FaceColor rotatingFace;
+
             //Reset the alert text
             AlertText.text = "";
 
@@ -139,39 +144,45 @@ public class RubiksCube : MonoBehaviour
             remainingRotationFrames = FRAMES_PER_ROTATION;
 
             //If the shift key is pressed, the turn is counterclockwise. Otherwise, it is clockwise
-            var rotationDirection = Input.GetKey(KeyCode.LeftShift) ? RotationDirection.Counterclockwise : RotationDirection.Clockwise;
-            rubiksCube.SetRotationDirection(rotationDirection);
+            rotationDirection = Input.GetKey(KeyCode.LeftShift) ? RotationDirection.Counterclockwise : RotationDirection.Clockwise;          
 
             //Blue Face Rotation
             if (Input.GetKeyDown(KeyCode.B))
             {
-                rubiksCube.SetRotatingFace(FaceColor.Blue);
+                rotatingFace = FaceColor.Blue;                
             }
             //Green Face Rotation
             else if (Input.GetKeyDown(KeyCode.G))
             {
-                rubiksCube.SetRotatingFace(FaceColor.Green);
+                rotatingFace = FaceColor.Green;
             }
             //Red Face Rotation
             else if (Input.GetKeyDown(KeyCode.R))
             {
-                rubiksCube.SetRotatingFace(FaceColor.Red);
+                rotatingFace = FaceColor.Red;
             }
             //Orange Face Rotation
             else if (Input.GetKeyDown(KeyCode.O))
             {
-                rubiksCube.SetRotatingFace(FaceColor.Orange);
+                rotatingFace = FaceColor.Orange;
             }
             //White Face Rotation
             else if (Input.GetKeyDown(KeyCode.W))
             {
-                rubiksCube.SetRotatingFace(FaceColor.White);
+                rotatingFace = FaceColor.White;
             }
             //Yellow Face Rotation
-            else if (Input.GetKeyDown(KeyCode.Y))
+            else
             {
-                rubiksCube.SetRotatingFace(FaceColor.Yellow);
+                rotatingFace = FaceColor.Yellow;
             }
+
+            //Set the parameters needed to graphically update the cube
+            rubiksCube.SetRotationDirection(rotationDirection);
+            rubiksCube.SetRotatingFace(rotatingFace);
+
+            //Adjust the internal state of the cube
+            rubiksCube.UpdateState(rotatingFace, rotationDirection);
         }     
 	}
 
@@ -205,28 +216,23 @@ public class RubiksCube : MonoBehaviour
 
     public void HumanSolve()
     {
-        //Reset the alert text
-        AlertText.text = "";
+        //If the cube is already solved, no further work needs to be done
+        if(rubiksCube.IsSolved())
+        {
+            AlertText.text = "The Rubik's Cube is already solved.";
+        }
+        else
+        {
+            //Reset the alert text
+            AlertText.text = "";
 
-        if (rubiksCube.GetBlueFaceCubes()[0, 1] == rubiksCube.Edge_RB)
-        {
             isSolving = true;
-            solveRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
             remainingRotationFrames = 0;
-        }
-        if (rubiksCube.GetBlueFaceCubes()[2, 1] == rubiksCube.Edge_RB)
-        {
-            isSolving = true;
-            solveRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise));
-            remainingRotationFrames = 0;
-        }
-        if (rubiksCube.GetBlueFaceCubes()[1, 0] == rubiksCube.Edge_RB)
-        {
-            isSolving = true;
-            solveRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
-            solveRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
-            remainingRotationFrames = 0;
-        }
+
+            HumanSolver solver = new HumanSolver();
+
+            solveRotations = solver.Solve(new CubeState());
+        }       
     }
 
     private bool cubeIsInUse()

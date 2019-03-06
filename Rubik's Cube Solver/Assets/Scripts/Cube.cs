@@ -10,47 +10,87 @@ namespace Rubiks
 
         //Objects to represent the physical cube in the game
         //8 Corner Cubes
-        public GameObject Corner_OBW;
-        public GameObject Corner_OBY;
-        public GameObject Corner_OGW;
-        public GameObject Corner_OGY;
-        public GameObject Corner_RBW;
-        public GameObject Corner_RBY;
-        public GameObject Corner_RGW;
-        public GameObject Corner_RGY;
+        private GameObject Corner_OBW;
+        private GameObject Corner_OBY;
+        private GameObject Corner_OGW;
+        private GameObject Corner_OGY;
+        private GameObject Corner_RBW;
+        private GameObject Corner_RBY;
+        private GameObject Corner_RGW;
+        private GameObject Corner_RGY;
 
         //12 Edge Cubes
-        public GameObject Edge_BW;
-        public GameObject Edge_BY;
-        public GameObject Edge_GW;
-        public GameObject Edge_GY;
-        public GameObject Edge_OB;
-        public GameObject Edge_OG;
-        public GameObject Edge_OW;
-        public GameObject Edge_OY;
-        public GameObject Edge_RB;
-        public GameObject Edge_RG;
-        public GameObject Edge_RW;
-        public GameObject Edge_RY;
+        private GameObject Edge_BW;
+        private GameObject Edge_BY;
+        private GameObject Edge_GW;
+        private GameObject Edge_GY;
+        private GameObject Edge_OB;
+        private GameObject Edge_OG;
+        private GameObject Edge_OW;
+        private GameObject Edge_OY;
+        private GameObject Edge_RB;
+        private GameObject Edge_RG;
+        private GameObject Edge_RW;
+        private GameObject Edge_RY;
 
         //6 Middle Cubes
-        public GameObject Middle_B;
-        public GameObject Middle_G;
-        public GameObject Middle_O;
-        public GameObject Middle_R;
-        public GameObject Middle_W;
-        public GameObject Middle_Y;
+        private GameObject Middle_B;
+        private GameObject Middle_G;
+        private GameObject Middle_O;
+        private GameObject Middle_R;
+        private GameObject Middle_W;
+        private GameObject Middle_Y;
 
         //Objects to represent the current state of each cube face
         private Face blueFace, greenFace, orangeFace, redFace, whiteFace, yellowFace;
 
         //Variables for rotating the cube faces
-        private FaceColor rotatingFaceColor;
+        public FaceColor rotatingFaceColor;
         private Face rotatingFace;
-        private RotationDirection rotationDirection;
+        public RotationDirection rotationDirection;
 
-        public void InitializeFaces()
+        //Represent the internal state of the cube
+        private CubeState state;
+
+        public void Initialize()
         {
+            initializeCubits();
+            initializeFaces();
+            initializeState();
+        }
+
+        private void initializeCubits()
+        {
+            Corner_OBW = GameObject.Find("Corner_OBW");
+            Corner_OBY = GameObject.Find("Corner_OBY");
+            Corner_OGW = GameObject.Find("Corner_OGW");
+            Corner_OGY = GameObject.Find("Corner_OGY");
+            Corner_RBW = GameObject.Find("Corner_RBW");
+            Corner_RBY = GameObject.Find("Corner_RBY");
+            Corner_RGW = GameObject.Find("Corner_RGW");
+            Corner_RGY = GameObject.Find("Corner_RGY");
+            Edge_BW = GameObject.Find("Edge_BW");
+            Edge_BY = GameObject.Find("Edge_BY");
+            Edge_GW = GameObject.Find("Edge_GW");
+            Edge_GY = GameObject.Find("Edge_GY");
+            Edge_OB = GameObject.Find("Edge_OB");
+            Edge_OG = GameObject.Find("Edge_OG");
+            Edge_OW = GameObject.Find("Edge_OW");
+            Edge_OY = GameObject.Find("Edge_OY");
+            Edge_RB = GameObject.Find("Edge_RB");
+            Edge_RG = GameObject.Find("Edge_RG");
+            Edge_RW = GameObject.Find("Edge_RW");
+            Edge_RY = GameObject.Find("Edge_RY");
+            Middle_B = GameObject.Find("Middle_B");
+            Middle_G = GameObject.Find("Middle_G");
+            Middle_O = GameObject.Find("Middle_O");
+            Middle_R = GameObject.Find("Middle_R");
+            Middle_W = GameObject.Find("Middle_W");
+            Middle_Y = GameObject.Find("Middle_Y");
+        }
+
+        private void initializeFaces()
+        {     
             blueFace = new Face
             {
                 cubes = new GameObject[,]
@@ -60,7 +100,7 @@ namespace Rubiks
                     { Corner_OBW, Edge_BW, Corner_RBW}
                 },
                 rotationAxis = Vector3.left
-            };
+            };        
 
             greenFace = new Face
             {
@@ -118,32 +158,9 @@ namespace Rubiks
             };
         }
 
-        public bool IsSolved()
+        private void initializeState()
         {
-            return
-                //Ensure that the 8 corner cubes are in the correct location
-                blueFace.cubes[0, 0] == Corner_OBY
-                && blueFace.cubes[0, 2] == Corner_RBY
-                && blueFace.cubes[2, 2] == Corner_RBW
-                && blueFace.cubes[2, 0] == Corner_OBW
-                && greenFace.cubes[0, 0] == Corner_RGY
-                && greenFace.cubes[0, 2] == Corner_OGY
-                && greenFace.cubes[2, 2] == Corner_OGW
-                && greenFace.cubes[2, 0] == Corner_RGW
-
-                //Ensure that the 12 corner cubes are in the correct location
-                && blueFace.cubes[0, 1] == Edge_BY
-                && blueFace.cubes[1, 2] == Edge_RB
-                && blueFace.cubes[2, 1] == Edge_BW
-                && blueFace.cubes[1, 0] == Edge_OB
-                && greenFace.cubes[0, 1] == Edge_GY
-                && greenFace.cubes[1, 2] == Edge_OG
-                && greenFace.cubes[2, 1] == Edge_GW
-                && greenFace.cubes[1, 0] == Edge_RG
-                && redFace.cubes[0, 1] == Edge_RY
-                && redFace.cubes[2, 1] == Edge_RW
-                && orangeFace.cubes[0, 1] == Edge_OY
-                && orangeFace.cubes[2, 1] == Edge_OW;
+            state = new CubeState();
         }
 
         public GameObject[,] GetBlueFaceCubes()
@@ -176,6 +193,25 @@ namespace Rubiks
             return whiteFace.cubes;
         }
 
+        public bool IsSolved()
+        {
+            FaceColor[][] cubeFaces = state.GetAllFaces();
+
+            //If any square does not match the color of that face's center square, then the cube is not solved
+            for(int currentFace = 0; currentFace < CubeState.NUMBER_OF_FACES; currentFace++)
+            {
+                for(int currentSquare = 0; currentSquare < CubeState.CUBITS_PER_FACE; currentSquare++)
+                {
+                    if(cubeFaces[currentFace][currentSquare] != (FaceColor)currentFace)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         public void SetRotationDirection(RotationDirection direction)
         {
             rotationDirection = direction;
@@ -206,6 +242,11 @@ namespace Rubiks
                     rotatingFace = yellowFace;
                     break;
             }
+        }
+
+        public void UpdateState(FaceColor rotatingFace, RotationDirection direction)
+        {
+            state.Rotate(rotatingFace, direction);
         }
 
         public void RotateCubeFace()
