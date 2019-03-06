@@ -1,4 +1,5 @@
-﻿using Rubiks.Enums;
+﻿using Rubiks.Constants;
+using Rubiks.Enums;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,14 +8,15 @@ namespace Rubiks.Solvers
     public class HumanSolver
     {
         private Queue<Rotation> currentStepRotations;
-        private CubeState cubeState;
+        private CubeState cube;
 
-        public Queue<Rotation> Solve(CubeState state)
+        private RotationDirection direction;
+        private FaceColor face;
+
+        public Queue<Rotation> Solve(CubeState initialState)
         {
-            cubeState = state;
+            cube = initialState;
             Queue<Rotation> solutionPath = new Queue<Rotation>();
-
-            Debug.Log(state.GetAllFaces()[5][4].ToString());
 
             //Add the steps required to solve the white cross to the solution path
             Queue<Rotation> whiteCrossSteps = solveWhiteCross();
@@ -37,7 +39,12 @@ namespace Rubiks.Solvers
 
             //Add the steps required to solve the yellow edges to the solution path
 
-
+            //For debugging purposes only: Ensure the returned queue is not empty
+            if(solutionPath.Count == 0)
+            {
+                cube.Rotate(FaceColor.Yellow, RotationDirection.Clockwise);
+                solutionPath.Enqueue(new Rotation(FaceColor.Yellow, RotationDirection.Clockwise));
+            }
 
             //Return the sequence of operators that solves the cube
             return solutionPath;
@@ -47,15 +54,24 @@ namespace Rubiks.Solvers
         {
             currentStepRotations = new Queue<Rotation>();
 
-            currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise));
-
-            //Solve the blue-white edge
-
-            //Solve the red-white edge
-
-            //Solve the green-white edge
-
-            //Solve the orange-white edge
+            //Up to four loops are needed to solve each of the four white edges
+            if (cube.GetBlueFace()[Locations.RIGHT] == FaceColor.Blue && cube.GetRedFace()[Locations.LEFT] == FaceColor.White)
+            {
+                cube.Rotate(FaceColor.Blue, RotationDirection.Clockwise);
+                currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+            }
+            else if (cube.GetBlueFace()[Locations.TOP] == FaceColor.Blue && cube.GetYellowFace()[Locations.LEFT] == FaceColor.White)
+            {
+                cube.Rotate(FaceColor.Blue, RotationDirection.Clockwise);
+                cube.Rotate(FaceColor.Blue, RotationDirection.Clockwise);
+                currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+                currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+            }
+            else if (cube.GetBlueFace()[Locations.LEFT] == FaceColor.Blue && cube.GetOrangeFace()[Locations.RIGHT] == FaceColor.White)
+            {
+                cube.Rotate(FaceColor.Blue, RotationDirection.Counterclockwise);
+                currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise));
+            }
 
             return currentStepRotations;
         }
@@ -63,9 +79,6 @@ namespace Rubiks.Solvers
         private Queue<Rotation> solveWhiteFace(CubeState cube)
         {
             currentStepRotations = new Queue<Rotation>();
-
-            currentStepRotations.Enqueue(new Rotation(FaceColor.Yellow, RotationDirection.Clockwise));
-
             return currentStepRotations;
         }
     }

@@ -238,7 +238,6 @@ public class RubiksCube : MonoBehaviour
                 remainingRotationFrames = 0;
 
                 HumanSolver solver = new HumanSolver();
-
                 solveRotations = solver.Solve(rubiksCube.GetState());
             }
         }           

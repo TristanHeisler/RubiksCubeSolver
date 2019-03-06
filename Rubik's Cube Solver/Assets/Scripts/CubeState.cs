@@ -1,4 +1,5 @@
-﻿using Rubiks.Enums;
+﻿using Rubiks.Constants;
+using Rubiks.Enums;
 using UnityEngine;
 
 namespace Rubiks
@@ -6,23 +7,7 @@ namespace Rubiks
     public class CubeState
     {
         public const byte NUMBER_OF_FACES = 6;
-        public const byte CUBITS_PER_FACE = 8;
-
-        private const byte BLUE = (byte)FaceColor.Blue;
-        private const byte GREEN = (byte)FaceColor.Green;
-        private const byte ORANGE = (byte)FaceColor.Orange;
-        private const byte RED = (byte)FaceColor.Red;
-        private const byte WHITE = (byte)FaceColor.White;
-        private const byte YELLOW = (byte)FaceColor.Yellow;
-
-        private const byte TOP_LEFT = 0;
-        private const byte TOP = 1;
-        private const byte TOP_RIGHT = 2;
-        private const byte RIGHT = 3;
-        private const byte BOTTOM_RIGHT = 4;
-        private const byte BOTTOM = 5;
-        private const byte BOTTOM_LEFT = 6;
-        private const byte LEFT = 7;
+        public const byte CUBITS_PER_FACE = 8;          
 
         private FaceColor[][] squares = new FaceColor[NUMBER_OF_FACES][];
 
@@ -72,324 +57,324 @@ namespace Rubiks
         {
             FaceColor[] face = squares[(byte)rotatingFace];
 
-            FaceColor tempCorner = face[0];
-            FaceColor tempEdge = face[1];
+            FaceColor tempCorner = face[Locations.TOP_LEFT];
+            FaceColor tempEdge = face[Locations.TOP];
 
             if(direction == RotationDirection.Clockwise)
             {
                 //Remap the corners
-                face[0] = face[6];
-                face[6] = face[4];
-                face[4] = face[2];
-                face[2] = tempCorner;
+                face[Locations.TOP_LEFT] = face[Locations.BOTTOM_LEFT];
+                face[Locations.BOTTOM_LEFT] = face[Locations.BOTTOM_RIGHT];
+                face[Locations.BOTTOM_RIGHT] = face[Locations.TOP_RIGHT];
+                face[Locations.TOP_RIGHT] = tempCorner;
 
                 //Remap the edges
-                face[1] = face[7];
-                face[7] = face[5];
-                face[5] = face[3];
-                face[3] = tempEdge;
+                face[Locations.TOP] = face[Locations.LEFT];
+                face[Locations.LEFT] = face[Locations.BOTTOM];
+                face[Locations.BOTTOM] = face[Locations.RIGHT];
+                face[Locations.RIGHT] = tempEdge;
             }
             else
             {
                 //Remap the corners
-                face[0] = face[2];
-                face[2] = face[4];
-                face[4] = face[6];
-                face[6] = tempCorner;
+                face[Locations.TOP_LEFT] = face[Locations.TOP_RIGHT];
+                face[Locations.TOP_RIGHT] = face[Locations.BOTTOM_RIGHT];
+                face[Locations.BOTTOM_RIGHT] = face[Locations.BOTTOM_LEFT];
+                face[Locations.BOTTOM_LEFT] = tempCorner;
 
                 //Remap the edges
-                face[1] = face[3];
-                face[3] = face[5];
-                face[5] = face[7];
-                face[7] = tempEdge;
+                face[Locations.TOP] = face[Locations.RIGHT];
+                face[Locations.RIGHT] = face[Locations.BOTTOM];
+                face[Locations.BOTTOM] = face[Locations.LEFT];
+                face[Locations.LEFT] = tempEdge;
             }
         }
 
         private void rotateBlueAdjacentFaces(RotationDirection direction)
         {
-            FaceColor tempFirstCorner = squares[YELLOW][TOP_LEFT];
-            FaceColor tempEdge = squares[YELLOW][LEFT];
-            FaceColor tempSecondCorner = squares[YELLOW][BOTTOM_LEFT];
+            FaceColor tempFirstCorner = squares[Colors.YELLOW][Locations.TOP_LEFT];
+            FaceColor tempEdge = squares[Colors.YELLOW][Locations.LEFT];
+            FaceColor tempSecondCorner = squares[Colors.YELLOW][Locations.BOTTOM_LEFT];
 
             if (direction == RotationDirection.Clockwise)
             {
                 //Remap the first corner piece
-                squares[YELLOW][TOP_LEFT] = squares[ORANGE][BOTTOM_RIGHT];
-                squares[ORANGE][BOTTOM_RIGHT] = squares[WHITE][TOP_LEFT];
-                squares[WHITE][TOP_LEFT] = squares[RED][TOP_LEFT];
-                squares[RED][TOP_LEFT] = tempFirstCorner;
+                squares[Colors.YELLOW][Locations.TOP_LEFT] = squares[Colors.ORANGE][Locations.BOTTOM_RIGHT];
+                squares[Colors.ORANGE][Locations.BOTTOM_RIGHT] = squares[Colors.WHITE][Locations.TOP_LEFT];
+                squares[Colors.WHITE][Locations.TOP_LEFT] = squares[Colors.RED][Locations.TOP_LEFT];
+                squares[Colors.RED][Locations.TOP_LEFT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[YELLOW][LEFT] = squares[ORANGE][RIGHT];
-                squares[ORANGE][RIGHT] = squares[WHITE][LEFT];
-                squares[WHITE][LEFT] = squares[RED][LEFT];
-                squares[RED][LEFT] = tempEdge;
+                squares[Colors.YELLOW][Locations.LEFT] = squares[Colors.ORANGE][Locations.RIGHT];
+                squares[Colors.ORANGE][Locations.RIGHT] = squares[Colors.WHITE][Locations.LEFT];
+                squares[Colors.WHITE][Locations.LEFT] = squares[Colors.RED][Locations.LEFT];
+                squares[Colors.RED][Locations.LEFT] = tempEdge;
 
                 //Remap the second corner piece
-                squares[YELLOW][BOTTOM_LEFT] = squares[ORANGE][TOP_RIGHT];
-                squares[ORANGE][TOP_RIGHT] = squares[WHITE][BOTTOM_LEFT];
-                squares[WHITE][BOTTOM_LEFT] = squares[RED][BOTTOM_LEFT];
-                squares[RED][BOTTOM_LEFT] = tempSecondCorner;
+                squares[Colors.YELLOW][Locations.BOTTOM_LEFT] = squares[Colors.ORANGE][Locations.TOP_RIGHT];
+                squares[Colors.ORANGE][Locations.TOP_RIGHT] = squares[Colors.WHITE][Locations.BOTTOM_LEFT];
+                squares[Colors.WHITE][Locations.BOTTOM_LEFT] = squares[Colors.RED][Locations.BOTTOM_LEFT];
+                squares[Colors.RED][Locations.BOTTOM_LEFT] = tempSecondCorner;
             }
             else
             {
                 //Remap the first corner piece
-                squares[YELLOW][TOP_LEFT] = squares[RED][TOP_LEFT];
-                squares[RED][TOP_LEFT] = squares[WHITE][TOP_LEFT];
-                squares[WHITE][TOP_LEFT] = squares[ORANGE][BOTTOM_RIGHT];
-                squares[ORANGE][BOTTOM_RIGHT] = tempFirstCorner;
+                squares[Colors.YELLOW][Locations.TOP_LEFT] = squares[Colors.RED][Locations.TOP_LEFT];
+                squares[Colors.RED][Locations.TOP_LEFT] = squares[Colors.WHITE][Locations.TOP_LEFT];
+                squares[Colors.WHITE][Locations.TOP_LEFT] = squares[Colors.ORANGE][Locations.BOTTOM_RIGHT];
+                squares[Colors.ORANGE][Locations.BOTTOM_RIGHT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[YELLOW][LEFT] = squares[RED][LEFT];
-                squares[RED][LEFT] = squares[WHITE][LEFT];
-                squares[WHITE][LEFT] = squares[ORANGE][RIGHT];
-                squares[ORANGE][RIGHT] = tempEdge;
+                squares[Colors.YELLOW][Locations.LEFT] = squares[Colors.RED][Locations.LEFT];
+                squares[Colors.RED][Locations.LEFT] = squares[Colors.WHITE][Locations.LEFT];
+                squares[Colors.WHITE][Locations.LEFT] = squares[Colors.ORANGE][Locations.RIGHT];
+                squares[Colors.ORANGE][Locations.RIGHT] = tempEdge;
 
                 //Remap the second corner piece
-                squares[YELLOW][BOTTOM_LEFT] = squares[RED][BOTTOM_LEFT];
-                squares[RED][BOTTOM_LEFT] = squares[WHITE][BOTTOM_LEFT];
-                squares[WHITE][BOTTOM_LEFT] = squares[ORANGE][TOP_RIGHT];
-                squares[ORANGE][TOP_RIGHT] = tempSecondCorner;
+                squares[Colors.YELLOW][Locations.BOTTOM_LEFT] = squares[Colors.RED][Locations.BOTTOM_LEFT];
+                squares[Colors.RED][Locations.BOTTOM_LEFT] = squares[Colors.WHITE][Locations.BOTTOM_LEFT];
+                squares[Colors.WHITE][Locations.BOTTOM_LEFT] = squares[Colors.ORANGE][Locations.TOP_RIGHT];
+                squares[Colors.ORANGE][Locations.TOP_RIGHT] = tempSecondCorner;
             }
         }
 
         private void rotateGreenAdjacentFaces(RotationDirection direction)
         {
-            FaceColor tempFirstCorner = squares[YELLOW][BOTTOM_RIGHT];
-            FaceColor tempEdge = squares[YELLOW][RIGHT];
-            FaceColor tempSecondCorner = squares[YELLOW][TOP_RIGHT];
+            FaceColor tempFirstCorner = squares[Colors.YELLOW][Locations.BOTTOM_RIGHT];
+            FaceColor tempEdge = squares[Colors.YELLOW][Locations.RIGHT];
+            FaceColor tempSecondCorner = squares[Colors.YELLOW][Locations.TOP_RIGHT];
 
             if (direction == RotationDirection.Clockwise)
             {
                 //Remap the first corner piece
-                squares[YELLOW][BOTTOM_RIGHT] = squares[RED][BOTTOM_RIGHT];
-                squares[RED][BOTTOM_RIGHT] = squares[WHITE][BOTTOM_RIGHT];
-                squares[WHITE][BOTTOM_RIGHT] = squares[ORANGE][TOP_LEFT];
-                squares[ORANGE][TOP_LEFT] = tempFirstCorner;
+                squares[Colors.YELLOW][Locations.BOTTOM_RIGHT] = squares[Colors.RED][Locations.BOTTOM_RIGHT];
+                squares[Colors.RED][Locations.BOTTOM_RIGHT] = squares[Colors.WHITE][Locations.BOTTOM_RIGHT];
+                squares[Colors.WHITE][Locations.BOTTOM_RIGHT] = squares[Colors.ORANGE][Locations.TOP_LEFT];
+                squares[Colors.ORANGE][Locations.TOP_LEFT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[YELLOW][RIGHT] = squares[RED][RIGHT];
-                squares[RED][RIGHT] = squares[WHITE][RIGHT];
-                squares[WHITE][RIGHT] = squares[ORANGE][LEFT];
-                squares[ORANGE][LEFT] = tempEdge;
+                squares[Colors.YELLOW][Locations.RIGHT] = squares[Colors.RED][Locations.RIGHT];
+                squares[Colors.RED][Locations.RIGHT] = squares[Colors.WHITE][Locations.RIGHT];
+                squares[Colors.WHITE][Locations.RIGHT] = squares[Colors.ORANGE][Locations.LEFT];
+                squares[Colors.ORANGE][Locations.LEFT] = tempEdge;
 
                 //Remap the second corner piece
-                squares[YELLOW][TOP_RIGHT] = squares[RED][TOP_RIGHT];
-                squares[RED][TOP_RIGHT] = squares[WHITE][TOP_RIGHT];
-                squares[WHITE][TOP_RIGHT] = squares[ORANGE][BOTTOM_LEFT];
-                squares[ORANGE][BOTTOM_LEFT] = tempSecondCorner;
+                squares[Colors.YELLOW][Locations.TOP_RIGHT] = squares[Colors.RED][Locations.TOP_RIGHT];
+                squares[Colors.RED][Locations.TOP_RIGHT] = squares[Colors.WHITE][Locations.TOP_RIGHT];
+                squares[Colors.WHITE][Locations.TOP_RIGHT] = squares[Colors.ORANGE][Locations.BOTTOM_LEFT];
+                squares[Colors.ORANGE][Locations.BOTTOM_LEFT] = tempSecondCorner;
             }
             else
             {
                 //Remap the first corner piece
-                squares[YELLOW][BOTTOM_RIGHT] = squares[ORANGE][TOP_LEFT];
-                squares[ORANGE][TOP_LEFT] = squares[WHITE][BOTTOM_RIGHT];
-                squares[WHITE][BOTTOM_RIGHT] = squares[RED][BOTTOM_RIGHT];
-                squares[RED][BOTTOM_RIGHT] = tempFirstCorner;
+                squares[Colors.YELLOW][Locations.BOTTOM_RIGHT] = squares[Colors.ORANGE][Locations.TOP_LEFT];
+                squares[Colors.ORANGE][Locations.TOP_LEFT] = squares[Colors.WHITE][Locations.BOTTOM_RIGHT];
+                squares[Colors.WHITE][Locations.BOTTOM_RIGHT] = squares[Colors.RED][Locations.BOTTOM_RIGHT];
+                squares[Colors.RED][Locations.BOTTOM_RIGHT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[YELLOW][RIGHT] = squares[ORANGE][LEFT];
-                squares[ORANGE][LEFT] = squares[WHITE][RIGHT];
-                squares[WHITE][RIGHT] = squares[RED][RIGHT];
-                squares[RED][RIGHT] = tempEdge;
+                squares[Colors.YELLOW][Locations.RIGHT] = squares[Colors.ORANGE][Locations.LEFT];
+                squares[Colors.ORANGE][Locations.LEFT] = squares[Colors.WHITE][Locations.RIGHT];
+                squares[Colors.WHITE][Locations.RIGHT] = squares[Colors.RED][Locations.RIGHT];
+                squares[Colors.RED][Locations.RIGHT] = tempEdge;
 
                 //Remap the second corner piece
-                squares[YELLOW][TOP_RIGHT] = squares[ORANGE][BOTTOM_LEFT];
-                squares[ORANGE][BOTTOM_LEFT] = squares[WHITE][TOP_RIGHT];
-                squares[WHITE][TOP_RIGHT] = squares[RED][TOP_RIGHT];
-                squares[RED][TOP_RIGHT] = tempSecondCorner;
+                squares[Colors.YELLOW][Locations.TOP_RIGHT] = squares[Colors.ORANGE][Locations.BOTTOM_LEFT];
+                squares[Colors.ORANGE][Locations.BOTTOM_LEFT] = squares[Colors.WHITE][Locations.TOP_RIGHT];
+                squares[Colors.WHITE][Locations.TOP_RIGHT] = squares[Colors.RED][Locations.TOP_RIGHT];
+                squares[Colors.RED][Locations.TOP_RIGHT] = tempSecondCorner;
             }
         }
 
         private void rotateOrangeAdjacentFaces(RotationDirection direction)
         {
-            FaceColor tempFirstCorner = squares[YELLOW][TOP_RIGHT];
-            FaceColor tempEdge = squares[YELLOW][TOP];
-            FaceColor tempSecondCorner = squares[YELLOW][TOP_LEFT];
+            FaceColor tempFirstCorner = squares[Colors.YELLOW][Locations.TOP_RIGHT];
+            FaceColor tempEdge = squares[Colors.YELLOW][Locations.TOP];
+            FaceColor tempSecondCorner = squares[Colors.YELLOW][Locations.TOP_LEFT];
 
             if (direction == RotationDirection.Clockwise)
             {
                 //Remap the first corner piece
-                squares[YELLOW][TOP_RIGHT] = squares[GREEN][BOTTOM_RIGHT];
-                squares[GREEN][BOTTOM_RIGHT] = squares[WHITE][BOTTOM_LEFT];
-                squares[WHITE][BOTTOM_LEFT] = squares[BLUE][TOP_LEFT];
-                squares[BLUE][TOP_LEFT] = tempFirstCorner;
+                squares[Colors.YELLOW][Locations.TOP_RIGHT] = squares[Colors.GREEN][Locations.BOTTOM_RIGHT];
+                squares[Colors.GREEN][Locations.BOTTOM_RIGHT] = squares[Colors.WHITE][Locations.BOTTOM_LEFT];
+                squares[Colors.WHITE][Locations.BOTTOM_LEFT] = squares[Colors.BLUE][Locations.TOP_LEFT];
+                squares[Colors.BLUE][Locations.TOP_LEFT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[YELLOW][TOP] = squares[GREEN][RIGHT];
-                squares[GREEN][RIGHT] = squares[WHITE][BOTTOM];
-                squares[WHITE][BOTTOM] = squares[BLUE][LEFT];
-                squares[BLUE][LEFT] = tempEdge;
+                squares[Colors.YELLOW][Locations.TOP] = squares[Colors.GREEN][Locations.RIGHT];
+                squares[Colors.GREEN][Locations.RIGHT] = squares[Colors.WHITE][Locations.BOTTOM];
+                squares[Colors.WHITE][Locations.BOTTOM] = squares[Colors.BLUE][Locations.LEFT];
+                squares[Colors.BLUE][Locations.LEFT] = tempEdge;
 
                 //Remap the second corner piece
-                squares[YELLOW][TOP_LEFT] = squares[GREEN][TOP_RIGHT];
-                squares[GREEN][TOP_RIGHT] = squares[WHITE][BOTTOM_RIGHT];
-                squares[WHITE][BOTTOM_RIGHT] = squares[BLUE][BOTTOM_LEFT];
-                squares[BLUE][BOTTOM_LEFT] = tempSecondCorner;
+                squares[Colors.YELLOW][Locations.TOP_LEFT] = squares[Colors.GREEN][Locations.TOP_RIGHT];
+                squares[Colors.GREEN][Locations.TOP_RIGHT] = squares[Colors.WHITE][Locations.BOTTOM_RIGHT];
+                squares[Colors.WHITE][Locations.BOTTOM_RIGHT] = squares[Colors.BLUE][Locations.BOTTOM_LEFT];
+                squares[Colors.BLUE][Locations.BOTTOM_LEFT] = tempSecondCorner;
             }
             else
             {
                 //Remap the first corner piece
-                squares[YELLOW][TOP_RIGHT] = squares[BLUE][TOP_LEFT];
-                squares[BLUE][TOP_LEFT] = squares[WHITE][BOTTOM_LEFT];
-                squares[WHITE][BOTTOM_LEFT] = squares[GREEN][BOTTOM_RIGHT];
-                squares[GREEN][BOTTOM_RIGHT] = tempFirstCorner;
+                squares[Colors.YELLOW][Locations.TOP_RIGHT] = squares[Colors.BLUE][Locations.TOP_LEFT];
+                squares[Colors.BLUE][Locations.TOP_LEFT] = squares[Colors.WHITE][Locations.BOTTOM_LEFT];
+                squares[Colors.WHITE][Locations.BOTTOM_LEFT] = squares[Colors.GREEN][Locations.BOTTOM_RIGHT];
+                squares[Colors.GREEN][Locations.BOTTOM_RIGHT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[YELLOW][TOP] = squares[BLUE][LEFT];
-                squares[BLUE][LEFT] = squares[WHITE][BOTTOM];
-                squares[WHITE][BOTTOM] = squares[GREEN][RIGHT];
-                squares[GREEN][RIGHT] = tempEdge;
+                squares[Colors.YELLOW][Locations.TOP] = squares[Colors.BLUE][Locations.LEFT];
+                squares[Colors.BLUE][Locations.LEFT] = squares[Colors.WHITE][Locations.BOTTOM];
+                squares[Colors.WHITE][Locations.BOTTOM] = squares[Colors.GREEN][Locations.RIGHT];
+                squares[Colors.GREEN][Locations.RIGHT] = tempEdge;
 
                 //Remap the second corner piece
-                squares[YELLOW][TOP_LEFT] = squares[BLUE][BOTTOM_LEFT];
-                squares[BLUE][BOTTOM_LEFT] = squares[WHITE][BOTTOM_RIGHT];
-                squares[WHITE][BOTTOM_RIGHT] = squares[GREEN][TOP_RIGHT];
-                squares[GREEN][TOP_RIGHT] = tempSecondCorner;
+                squares[Colors.YELLOW][Locations.TOP_LEFT] = squares[Colors.BLUE][Locations.BOTTOM_LEFT];
+                squares[Colors.BLUE][Locations.BOTTOM_LEFT] = squares[Colors.WHITE][Locations.BOTTOM_RIGHT];
+                squares[Colors.WHITE][Locations.BOTTOM_RIGHT] = squares[Colors.GREEN][Locations.TOP_RIGHT];
+                squares[Colors.GREEN][Locations.TOP_RIGHT] = tempSecondCorner;
             }
         }
 
         private void rotateRedAdjacentFaces(RotationDirection direction)
         {
-            FaceColor tempFirstCorner = squares[YELLOW][BOTTOM_LEFT];
-            FaceColor tempEdge = squares[YELLOW][BOTTOM];
-            FaceColor tempSecondCorner = squares[YELLOW][BOTTOM_RIGHT];
+            FaceColor tempFirstCorner = squares[Colors.YELLOW][Locations.BOTTOM_LEFT];
+            FaceColor tempEdge = squares[Colors.YELLOW][Locations.BOTTOM];
+            FaceColor tempSecondCorner = squares[Colors.YELLOW][Locations.BOTTOM_RIGHT];
 
             if (direction == RotationDirection.Clockwise)
             {
                 //Remap the first corner piece
-                squares[YELLOW][BOTTOM_LEFT] = squares[BLUE][BOTTOM_RIGHT];
-                squares[BLUE][BOTTOM_RIGHT] = squares[WHITE][TOP_RIGHT];
-                squares[WHITE][TOP_RIGHT] = squares[GREEN][TOP_LEFT];
-                squares[GREEN][TOP_LEFT] = tempFirstCorner;
+                squares[Colors.YELLOW][Locations.BOTTOM_LEFT] = squares[Colors.BLUE][Locations.BOTTOM_RIGHT];
+                squares[Colors.BLUE][Locations.BOTTOM_RIGHT] = squares[Colors.WHITE][Locations.TOP_RIGHT];
+                squares[Colors.WHITE][Locations.TOP_RIGHT] = squares[Colors.GREEN][Locations.TOP_LEFT];
+                squares[Colors.GREEN][Locations.TOP_LEFT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[YELLOW][BOTTOM] = squares[BLUE][RIGHT];
-                squares[BLUE][RIGHT] = squares[WHITE][TOP];
-                squares[WHITE][TOP] = squares[GREEN][LEFT];
-                squares[GREEN][LEFT] = tempEdge;
+                squares[Colors.YELLOW][Locations.BOTTOM] = squares[Colors.BLUE][Locations.RIGHT];
+                squares[Colors.BLUE][Locations.RIGHT] = squares[Colors.WHITE][Locations.TOP];
+                squares[Colors.WHITE][Locations.TOP] = squares[Colors.GREEN][Locations.LEFT];
+                squares[Colors.GREEN][Locations.LEFT] = tempEdge;
 
                 //Remap the second corner piece
-                squares[YELLOW][BOTTOM_RIGHT] = squares[BLUE][TOP_RIGHT];
-                squares[BLUE][TOP_RIGHT] = squares[WHITE][TOP_LEFT];
-                squares[WHITE][TOP_LEFT] = squares[GREEN][BOTTOM_LEFT];
-                squares[GREEN][BOTTOM_LEFT] = tempSecondCorner;
+                squares[Colors.YELLOW][Locations.BOTTOM_RIGHT] = squares[Colors.BLUE][Locations.TOP_RIGHT];
+                squares[Colors.BLUE][Locations.TOP_RIGHT] = squares[Colors.WHITE][Locations.TOP_LEFT];
+                squares[Colors.WHITE][Locations.TOP_LEFT] = squares[Colors.GREEN][Locations.BOTTOM_LEFT];
+                squares[Colors.GREEN][Locations.BOTTOM_LEFT] = tempSecondCorner;
             }
             else
             {
                 //Remap the first corner piece
-                squares[YELLOW][BOTTOM_LEFT] = squares[GREEN][TOP_LEFT];
-                squares[GREEN][TOP_LEFT] = squares[WHITE][TOP_RIGHT];
-                squares[WHITE][TOP_RIGHT] = squares[BLUE][BOTTOM_RIGHT];
-                squares[BLUE][BOTTOM_RIGHT] = tempFirstCorner;
+                squares[Colors.YELLOW][Locations.BOTTOM_LEFT] = squares[Colors.GREEN][Locations.TOP_LEFT];
+                squares[Colors.GREEN][Locations.TOP_LEFT] = squares[Colors.WHITE][Locations.TOP_RIGHT];
+                squares[Colors.WHITE][Locations.TOP_RIGHT] = squares[Colors.BLUE][Locations.BOTTOM_RIGHT];
+                squares[Colors.BLUE][Locations.BOTTOM_RIGHT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[YELLOW][BOTTOM] = squares[GREEN][LEFT];
-                squares[GREEN][LEFT] = squares[WHITE][TOP];
-                squares[WHITE][TOP] = squares[BLUE][RIGHT];
-                squares[BLUE][RIGHT] = tempEdge;
+                squares[Colors.YELLOW][Locations.BOTTOM] = squares[Colors.GREEN][Locations.LEFT];
+                squares[Colors.GREEN][Locations.LEFT] = squares[Colors.WHITE][Locations.TOP];
+                squares[Colors.WHITE][Locations.TOP] = squares[Colors.BLUE][Locations.RIGHT];
+                squares[Colors.BLUE][Locations.RIGHT] = tempEdge;
 
                 //Remap the second corner piece
-                squares[YELLOW][BOTTOM_RIGHT] = squares[GREEN][BOTTOM_LEFT];
-                squares[GREEN][BOTTOM_LEFT] = squares[WHITE][TOP_LEFT];
-                squares[WHITE][TOP_LEFT] = squares[BLUE][TOP_RIGHT];
-                squares[BLUE][TOP_RIGHT] = tempSecondCorner;
+                squares[Colors.YELLOW][Locations.BOTTOM_RIGHT] = squares[Colors.GREEN][Locations.BOTTOM_LEFT];
+                squares[Colors.GREEN][Locations.BOTTOM_LEFT] = squares[Colors.WHITE][Locations.TOP_LEFT];
+                squares[Colors.WHITE][Locations.TOP_LEFT] = squares[Colors.BLUE][Locations.TOP_RIGHT];
+                squares[Colors.BLUE][Locations.TOP_RIGHT] = tempSecondCorner;
             }
         }
 
         private void rotateWhiteAdjacentFaces(RotationDirection direction)
         {
-            FaceColor tempFirstCorner = squares[RED][BOTTOM_LEFT];
-            FaceColor tempEdge = squares[RED][BOTTOM];
-            FaceColor tempSecondCorner = squares[RED][BOTTOM_RIGHT];
+            FaceColor tempFirstCorner = squares[Colors.RED][Locations.BOTTOM_LEFT];
+            FaceColor tempEdge = squares[Colors.RED][Locations.BOTTOM];
+            FaceColor tempSecondCorner = squares[Colors.RED][Locations.BOTTOM_RIGHT];
 
             if (direction == RotationDirection.Clockwise)
             {
                 //Remap the first corner piece
-                squares[RED][BOTTOM_LEFT] = squares[BLUE][BOTTOM_LEFT];
-                squares[BLUE][BOTTOM_LEFT] = squares[ORANGE][BOTTOM_LEFT];
-                squares[ORANGE][BOTTOM_LEFT] = squares[GREEN][BOTTOM_LEFT];
-                squares[GREEN][BOTTOM_LEFT] = tempFirstCorner;
+                squares[Colors.RED][Locations.BOTTOM_LEFT] = squares[Colors.BLUE][Locations.BOTTOM_LEFT];
+                squares[Colors.BLUE][Locations.BOTTOM_LEFT] = squares[Colors.ORANGE][Locations.BOTTOM_LEFT];
+                squares[Colors.ORANGE][Locations.BOTTOM_LEFT] = squares[Colors.GREEN][Locations.BOTTOM_LEFT];
+                squares[Colors.GREEN][Locations.BOTTOM_LEFT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[RED][BOTTOM] = squares[BLUE][BOTTOM];
-                squares[BLUE][BOTTOM] = squares[ORANGE][BOTTOM];
-                squares[ORANGE][BOTTOM] = squares[GREEN][BOTTOM];
-                squares[GREEN][BOTTOM] = tempEdge;
+                squares[Colors.RED][Locations.BOTTOM] = squares[Colors.BLUE][Locations.BOTTOM];
+                squares[Colors.BLUE][Locations.BOTTOM] = squares[Colors.ORANGE][Locations.BOTTOM];
+                squares[Colors.ORANGE][Locations.BOTTOM] = squares[Colors.GREEN][Locations.BOTTOM];
+                squares[Colors.GREEN][Locations.BOTTOM] = tempEdge;
 
                 //Remap the second corner piece
-                squares[RED][BOTTOM_RIGHT] = squares[BLUE][BOTTOM_RIGHT];
-                squares[BLUE][BOTTOM_RIGHT] = squares[ORANGE][BOTTOM_RIGHT];
-                squares[ORANGE][BOTTOM_RIGHT] = squares[GREEN][BOTTOM_RIGHT];
-                squares[GREEN][BOTTOM_RIGHT] = tempSecondCorner;
+                squares[Colors.RED][Locations.BOTTOM_RIGHT] = squares[Colors.BLUE][Locations.BOTTOM_RIGHT];
+                squares[Colors.BLUE][Locations.BOTTOM_RIGHT] = squares[Colors.ORANGE][Locations.BOTTOM_RIGHT];
+                squares[Colors.ORANGE][Locations.BOTTOM_RIGHT] = squares[Colors.GREEN][Locations.BOTTOM_RIGHT];
+                squares[Colors.GREEN][Locations.BOTTOM_RIGHT] = tempSecondCorner;
             }
             else
             {
                 //Remap the first corner piece
-                squares[RED][BOTTOM_LEFT] = squares[GREEN][BOTTOM_LEFT];
-                squares[GREEN][BOTTOM_LEFT] = squares[ORANGE][BOTTOM_LEFT];
-                squares[ORANGE][BOTTOM_LEFT] = squares[BLUE][BOTTOM_LEFT];
-                squares[BLUE][BOTTOM_LEFT] = tempFirstCorner;
+                squares[Colors.RED][Locations.BOTTOM_LEFT] = squares[Colors.GREEN][Locations.BOTTOM_LEFT];
+                squares[Colors.GREEN][Locations.BOTTOM_LEFT] = squares[Colors.ORANGE][Locations.BOTTOM_LEFT];
+                squares[Colors.ORANGE][Locations.BOTTOM_LEFT] = squares[Colors.BLUE][Locations.BOTTOM_LEFT];
+                squares[Colors.BLUE][Locations.BOTTOM_LEFT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[RED][BOTTOM] = squares[GREEN][BOTTOM];
-                squares[GREEN][BOTTOM] = squares[ORANGE][BOTTOM];
-                squares[ORANGE][BOTTOM] = squares[BLUE][BOTTOM];
-                squares[BLUE][BOTTOM] = tempEdge;
+                squares[Colors.RED][Locations.BOTTOM] = squares[Colors.GREEN][Locations.BOTTOM];
+                squares[Colors.GREEN][Locations.BOTTOM] = squares[Colors.ORANGE][Locations.BOTTOM];
+                squares[Colors.ORANGE][Locations.BOTTOM] = squares[Colors.BLUE][Locations.BOTTOM];
+                squares[Colors.BLUE][Locations.BOTTOM] = tempEdge;
 
                 //Remap the second corner piece
-                squares[RED][BOTTOM_RIGHT] = squares[GREEN][BOTTOM_RIGHT];
-                squares[GREEN][BOTTOM_RIGHT] = squares[ORANGE][BOTTOM_RIGHT];
-                squares[ORANGE][BOTTOM_RIGHT] = squares[BLUE][BOTTOM_RIGHT];
-                squares[BLUE][BOTTOM_RIGHT] = tempSecondCorner;
+                squares[Colors.RED][Locations.BOTTOM_RIGHT] = squares[Colors.GREEN][Locations.BOTTOM_RIGHT];
+                squares[Colors.GREEN][Locations.BOTTOM_RIGHT] = squares[Colors.ORANGE][Locations.BOTTOM_RIGHT];
+                squares[Colors.ORANGE][Locations.BOTTOM_RIGHT] = squares[Colors.BLUE][Locations.BOTTOM_RIGHT];
+                squares[Colors.BLUE][Locations.BOTTOM_RIGHT] = tempSecondCorner;
             }
         }
 
         private void rotateYellowAdjacentFaces(RotationDirection direction)
         {
-            FaceColor tempFirstCorner = squares[ORANGE][TOP_RIGHT];
-            FaceColor tempEdge = squares[ORANGE][TOP];
-            FaceColor tempSecondCorner = squares[ORANGE][TOP_LEFT];
+            FaceColor tempFirstCorner = squares[Colors.ORANGE][Locations.TOP_RIGHT];
+            FaceColor tempEdge = squares[Colors.ORANGE][Locations.TOP];
+            FaceColor tempSecondCorner = squares[Colors.ORANGE][Locations.TOP_LEFT];
 
             if (direction == RotationDirection.Clockwise)
             {
                 //Remap the first corner piece
-                squares[ORANGE][TOP_RIGHT] = squares[BLUE][TOP_RIGHT];
-                squares[BLUE][TOP_RIGHT] = squares[RED][TOP_RIGHT];
-                squares[RED][TOP_RIGHT] = squares[GREEN][TOP_RIGHT];
-                squares[GREEN][TOP_RIGHT] = tempFirstCorner;
+                squares[Colors.ORANGE][Locations.TOP_RIGHT] = squares[Colors.BLUE][Locations.TOP_RIGHT];
+                squares[Colors.BLUE][Locations.TOP_RIGHT] = squares[Colors.RED][Locations.TOP_RIGHT];
+                squares[Colors.RED][Locations.TOP_RIGHT] = squares[Colors.GREEN][Locations.TOP_RIGHT];
+                squares[Colors.GREEN][Locations.TOP_RIGHT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[ORANGE][TOP] = squares[BLUE][TOP];
-                squares[BLUE][TOP] = squares[RED][TOP];
-                squares[RED][TOP] = squares[GREEN][TOP];
-                squares[GREEN][TOP] = tempEdge;
+                squares[Colors.ORANGE][Locations.TOP] = squares[Colors.BLUE][Locations.TOP];
+                squares[Colors.BLUE][Locations.TOP] = squares[Colors.RED][Locations.TOP];
+                squares[Colors.RED][Locations.TOP] = squares[Colors.GREEN][Locations.TOP];
+                squares[Colors.GREEN][Locations.TOP] = tempEdge;
 
                 //Remap the second corner piece
-                squares[ORANGE][TOP_LEFT] = squares[BLUE][TOP_LEFT];
-                squares[BLUE][TOP_LEFT] = squares[RED][TOP_LEFT];
-                squares[RED][TOP_LEFT] = squares[GREEN][TOP_LEFT];
-                squares[GREEN][TOP_LEFT] = tempSecondCorner;
+                squares[Colors.ORANGE][Locations.TOP_LEFT] = squares[Colors.BLUE][Locations.TOP_LEFT];
+                squares[Colors.BLUE][Locations.TOP_LEFT] = squares[Colors.RED][Locations.TOP_LEFT];
+                squares[Colors.RED][Locations.TOP_LEFT] = squares[Colors.GREEN][Locations.TOP_LEFT];
+                squares[Colors.GREEN][Locations.TOP_LEFT] = tempSecondCorner;
             }
             else
             {
                 //Remap the first corner piece
-                squares[ORANGE][TOP_RIGHT] = squares[GREEN][TOP_RIGHT];
-                squares[GREEN][TOP_RIGHT] = squares[RED][TOP_RIGHT];
-                squares[RED][TOP_RIGHT] = squares[BLUE][TOP_RIGHT];
-                squares[BLUE][TOP_RIGHT] = tempFirstCorner;
+                squares[Colors.ORANGE][Locations.TOP_RIGHT] = squares[Colors.GREEN][Locations.TOP_RIGHT];
+                squares[Colors.GREEN][Locations.TOP_RIGHT] = squares[Colors.RED][Locations.TOP_RIGHT];
+                squares[Colors.RED][Locations.TOP_RIGHT] = squares[Colors.BLUE][Locations.TOP_RIGHT];
+                squares[Colors.BLUE][Locations.TOP_RIGHT] = tempFirstCorner;
 
                 //Remap the edge piece
-                squares[ORANGE][TOP] = squares[GREEN][TOP];
-                squares[GREEN][TOP] = squares[RED][TOP];
-                squares[RED][TOP] = squares[BLUE][TOP];
-                squares[BLUE][TOP] = tempEdge;
+                squares[Colors.ORANGE][Locations.TOP] = squares[Colors.GREEN][Locations.TOP];
+                squares[Colors.GREEN][Locations.TOP] = squares[Colors.RED][Locations.TOP];
+                squares[Colors.RED][Locations.TOP] = squares[Colors.BLUE][Locations.TOP];
+                squares[Colors.BLUE][Locations.TOP] = tempEdge;
 
                 //Remap the second corner piece
-                squares[ORANGE][TOP_LEFT] = squares[GREEN][TOP_LEFT];
-                squares[GREEN][TOP_LEFT] = squares[RED][TOP_LEFT];
-                squares[RED][TOP_LEFT] = squares[BLUE][TOP_LEFT];
-                squares[BLUE][TOP_LEFT] = tempSecondCorner;
+                squares[Colors.ORANGE][Locations.TOP_LEFT] = squares[Colors.GREEN][Locations.TOP_LEFT];
+                squares[Colors.GREEN][Locations.TOP_LEFT] = squares[Colors.RED][Locations.TOP_LEFT];
+                squares[Colors.RED][Locations.TOP_LEFT] = squares[Colors.BLUE][Locations.TOP_LEFT];
+                squares[Colors.BLUE][Locations.TOP_LEFT] = tempSecondCorner;
             }
         }
 
@@ -407,6 +392,36 @@ namespace Rubiks
         public FaceColor[][] GetAllFaces()
         {
             return squares;
+        }
+
+        public FaceColor[] GetBlueFace()
+        {
+            return squares[Colors.BLUE];
+        }
+
+        public FaceColor[] GetGreenFace()
+        {
+            return squares[Colors.GREEN];
+        }
+
+        public FaceColor[] GetOrangeFace()
+        {
+            return squares[Colors.ORANGE];
+        }
+
+        public FaceColor[] GetRedFace()
+        {
+            return squares[Colors.RED];
+        }
+
+        public FaceColor[] GetWhiteFace()
+        {
+            return squares[Colors.WHITE];
+        }
+
+        public FaceColor[] GetYellowFace()
+        {
+            return squares[Colors.YELLOW];
         }
     }
 }
