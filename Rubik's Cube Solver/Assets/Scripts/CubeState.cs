@@ -107,14 +107,146 @@ namespace Rubiks
 
         private void rotateBlueAdjacentFaces(RotationDirection direction)
         {
+            FaceColor tempFirstCorner = squares[YELLOW][TOP_LEFT];
+            FaceColor tempEdge = squares[YELLOW][LEFT];
+            FaceColor tempSecondCorner = squares[YELLOW][BOTTOM_LEFT];
+
+            if (direction == RotationDirection.Clockwise)
+            {
+                //Remap the first corner piece
+                squares[YELLOW][TOP_LEFT] = squares[ORANGE][BOTTOM_RIGHT];
+                squares[ORANGE][BOTTOM_RIGHT] = squares[WHITE][TOP_LEFT];
+                squares[WHITE][TOP_LEFT] = squares[RED][TOP_LEFT];
+                squares[RED][TOP_LEFT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[YELLOW][LEFT] = squares[ORANGE][RIGHT];
+                squares[ORANGE][RIGHT] = squares[WHITE][LEFT];
+                squares[WHITE][LEFT] = squares[RED][LEFT];
+                squares[RED][LEFT] = tempEdge;
+
+                //Remap the second corner piece
+                squares[YELLOW][BOTTOM_LEFT] = squares[ORANGE][TOP_RIGHT];
+                squares[ORANGE][TOP_RIGHT] = squares[WHITE][BOTTOM_LEFT];
+                squares[WHITE][BOTTOM_LEFT] = squares[RED][BOTTOM_LEFT];
+                squares[RED][BOTTOM_LEFT] = tempSecondCorner;
+            }
+            else
+            {
+                //Remap the first corner piece
+                squares[YELLOW][TOP_LEFT] = squares[RED][TOP_LEFT];
+                squares[RED][TOP_LEFT] = squares[WHITE][TOP_LEFT];
+                squares[WHITE][TOP_LEFT] = squares[ORANGE][BOTTOM_RIGHT];
+                squares[ORANGE][BOTTOM_RIGHT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[YELLOW][LEFT] = squares[RED][LEFT];
+                squares[RED][LEFT] = squares[WHITE][LEFT];
+                squares[WHITE][LEFT] = squares[ORANGE][RIGHT];
+                squares[ORANGE][RIGHT] = tempEdge;
+
+                //Remap the second corner piece
+                squares[YELLOW][BOTTOM_LEFT] = squares[RED][BOTTOM_LEFT];
+                squares[RED][BOTTOM_LEFT] = squares[WHITE][BOTTOM_LEFT];
+                squares[WHITE][BOTTOM_LEFT] = squares[ORANGE][TOP_RIGHT];
+                squares[ORANGE][TOP_RIGHT] = tempSecondCorner;
+            }
         }
 
         private void rotateGreenAdjacentFaces(RotationDirection direction)
         {
+            FaceColor tempFirstCorner = squares[YELLOW][BOTTOM_RIGHT];
+            FaceColor tempEdge = squares[YELLOW][RIGHT];
+            FaceColor tempSecondCorner = squares[YELLOW][TOP_RIGHT];
+
+            if (direction == RotationDirection.Clockwise)
+            {
+                //Remap the first corner piece
+                squares[YELLOW][BOTTOM_RIGHT] = squares[RED][BOTTOM_RIGHT];
+                squares[RED][BOTTOM_RIGHT] = squares[WHITE][BOTTOM_RIGHT];
+                squares[WHITE][BOTTOM_RIGHT] = squares[ORANGE][TOP_LEFT];
+                squares[ORANGE][TOP_LEFT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[YELLOW][RIGHT] = squares[RED][RIGHT];
+                squares[RED][RIGHT] = squares[WHITE][RIGHT];
+                squares[WHITE][RIGHT] = squares[ORANGE][LEFT];
+                squares[ORANGE][LEFT] = tempEdge;
+
+                //Remap the second corner piece
+                squares[YELLOW][TOP_RIGHT] = squares[RED][TOP_RIGHT];
+                squares[RED][TOP_RIGHT] = squares[WHITE][TOP_RIGHT];
+                squares[WHITE][TOP_RIGHT] = squares[ORANGE][BOTTOM_LEFT];
+                squares[ORANGE][BOTTOM_LEFT] = tempSecondCorner;
+            }
+            else
+            {
+                //Remap the first corner piece
+                squares[YELLOW][BOTTOM_RIGHT] = squares[ORANGE][TOP_LEFT];
+                squares[ORANGE][TOP_LEFT] = squares[WHITE][BOTTOM_RIGHT];
+                squares[WHITE][BOTTOM_RIGHT] = squares[RED][BOTTOM_RIGHT];
+                squares[RED][BOTTOM_RIGHT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[YELLOW][RIGHT] = squares[ORANGE][LEFT];
+                squares[ORANGE][LEFT] = squares[WHITE][RIGHT];
+                squares[WHITE][RIGHT] = squares[RED][RIGHT];
+                squares[RED][RIGHT] = tempEdge;
+
+                //Remap the second corner piece
+                squares[YELLOW][TOP_RIGHT] = squares[ORANGE][BOTTOM_LEFT];
+                squares[ORANGE][BOTTOM_LEFT] = squares[WHITE][TOP_RIGHT];
+                squares[WHITE][TOP_RIGHT] = squares[RED][TOP_RIGHT];
+                squares[RED][TOP_RIGHT] = tempSecondCorner;
+            }
         }
 
         private void rotateOrangeAdjacentFaces(RotationDirection direction)
         {
+            FaceColor tempFirstCorner = squares[YELLOW][TOP_RIGHT];
+            FaceColor tempEdge = squares[YELLOW][TOP];
+            FaceColor tempSecondCorner = squares[YELLOW][TOP_LEFT];
+
+            if (direction == RotationDirection.Clockwise)
+            {
+                //Remap the first corner piece
+                squares[YELLOW][TOP_RIGHT] = squares[GREEN][BOTTOM_RIGHT];
+                squares[GREEN][BOTTOM_RIGHT] = squares[WHITE][BOTTOM_LEFT];
+                squares[WHITE][BOTTOM_LEFT] = squares[BLUE][TOP_LEFT];
+                squares[BLUE][TOP_LEFT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[YELLOW][TOP] = squares[GREEN][RIGHT];
+                squares[GREEN][RIGHT] = squares[WHITE][BOTTOM];
+                squares[WHITE][BOTTOM] = squares[BLUE][LEFT];
+                squares[BLUE][LEFT] = tempEdge;
+
+                //Remap the second corner piece
+                squares[YELLOW][TOP_LEFT] = squares[GREEN][TOP_RIGHT];
+                squares[GREEN][TOP_RIGHT] = squares[WHITE][BOTTOM_RIGHT];
+                squares[WHITE][BOTTOM_RIGHT] = squares[BLUE][BOTTOM_LEFT];
+                squares[BLUE][BOTTOM_LEFT] = tempSecondCorner;
+            }
+            else
+            {
+                //Remap the first corner piece
+                squares[YELLOW][TOP_RIGHT] = squares[BLUE][TOP_LEFT];
+                squares[BLUE][TOP_LEFT] = squares[WHITE][BOTTOM_LEFT];
+                squares[WHITE][BOTTOM_LEFT] = squares[GREEN][BOTTOM_RIGHT];
+                squares[GREEN][BOTTOM_RIGHT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[YELLOW][TOP] = squares[BLUE][LEFT];
+                squares[BLUE][LEFT] = squares[WHITE][BOTTOM];
+                squares[WHITE][BOTTOM] = squares[GREEN][RIGHT];
+                squares[GREEN][RIGHT] = tempEdge;
+
+                //Remap the second corner piece
+                squares[YELLOW][TOP_LEFT] = squares[BLUE][BOTTOM_LEFT];
+                squares[BLUE][BOTTOM_LEFT] = squares[WHITE][BOTTOM_RIGHT];
+                squares[WHITE][BOTTOM_RIGHT] = squares[GREEN][TOP_RIGHT];
+                squares[GREEN][TOP_RIGHT] = tempSecondCorner;
+            }
         }
 
         private void rotateRedAdjacentFaces(RotationDirection direction)
@@ -167,22 +299,108 @@ namespace Rubiks
 
         private void rotateWhiteAdjacentFaces(RotationDirection direction)
         {
+            FaceColor tempFirstCorner = squares[RED][BOTTOM_LEFT];
+            FaceColor tempEdge = squares[RED][BOTTOM];
+            FaceColor tempSecondCorner = squares[RED][BOTTOM_RIGHT];
+
+            if (direction == RotationDirection.Clockwise)
+            {
+                //Remap the first corner piece
+                squares[RED][BOTTOM_LEFT] = squares[BLUE][BOTTOM_LEFT];
+                squares[BLUE][BOTTOM_LEFT] = squares[ORANGE][BOTTOM_LEFT];
+                squares[ORANGE][BOTTOM_LEFT] = squares[GREEN][BOTTOM_LEFT];
+                squares[GREEN][BOTTOM_LEFT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[RED][BOTTOM] = squares[BLUE][BOTTOM];
+                squares[BLUE][BOTTOM] = squares[ORANGE][BOTTOM];
+                squares[ORANGE][BOTTOM] = squares[GREEN][BOTTOM];
+                squares[GREEN][BOTTOM] = tempEdge;
+
+                //Remap the second corner piece
+                squares[RED][BOTTOM_RIGHT] = squares[BLUE][BOTTOM_RIGHT];
+                squares[BLUE][BOTTOM_RIGHT] = squares[ORANGE][BOTTOM_RIGHT];
+                squares[ORANGE][BOTTOM_RIGHT] = squares[GREEN][BOTTOM_RIGHT];
+                squares[GREEN][BOTTOM_RIGHT] = tempSecondCorner;
+            }
+            else
+            {
+                //Remap the first corner piece
+                squares[RED][BOTTOM_LEFT] = squares[GREEN][BOTTOM_LEFT];
+                squares[GREEN][BOTTOM_LEFT] = squares[ORANGE][BOTTOM_LEFT];
+                squares[ORANGE][BOTTOM_LEFT] = squares[BLUE][BOTTOM_LEFT];
+                squares[BLUE][BOTTOM_LEFT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[RED][BOTTOM] = squares[GREEN][BOTTOM];
+                squares[GREEN][BOTTOM] = squares[ORANGE][BOTTOM];
+                squares[ORANGE][BOTTOM] = squares[BLUE][BOTTOM];
+                squares[BLUE][BOTTOM] = tempEdge;
+
+                //Remap the second corner piece
+                squares[RED][BOTTOM_RIGHT] = squares[GREEN][BOTTOM_RIGHT];
+                squares[GREEN][BOTTOM_RIGHT] = squares[ORANGE][BOTTOM_RIGHT];
+                squares[ORANGE][BOTTOM_RIGHT] = squares[BLUE][BOTTOM_RIGHT];
+                squares[BLUE][BOTTOM_RIGHT] = tempSecondCorner;
+            }
         }
 
         private void rotateYellowAdjacentFaces(RotationDirection direction)
         {
+            FaceColor tempFirstCorner = squares[ORANGE][TOP_RIGHT];
+            FaceColor tempEdge = squares[ORANGE][TOP];
+            FaceColor tempSecondCorner = squares[ORANGE][TOP_LEFT];
+
+            if (direction == RotationDirection.Clockwise)
+            {
+                //Remap the first corner piece
+                squares[ORANGE][TOP_RIGHT] = squares[BLUE][TOP_RIGHT];
+                squares[BLUE][TOP_RIGHT] = squares[RED][TOP_RIGHT];
+                squares[RED][TOP_RIGHT] = squares[GREEN][TOP_RIGHT];
+                squares[GREEN][TOP_RIGHT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[ORANGE][TOP] = squares[BLUE][TOP];
+                squares[BLUE][TOP] = squares[RED][TOP];
+                squares[RED][TOP] = squares[GREEN][TOP];
+                squares[GREEN][TOP] = tempEdge;
+
+                //Remap the second corner piece
+                squares[ORANGE][TOP_LEFT] = squares[BLUE][TOP_LEFT];
+                squares[BLUE][TOP_LEFT] = squares[RED][TOP_LEFT];
+                squares[RED][TOP_LEFT] = squares[GREEN][TOP_LEFT];
+                squares[GREEN][TOP_LEFT] = tempSecondCorner;
+            }
+            else
+            {
+                //Remap the first corner piece
+                squares[ORANGE][TOP_RIGHT] = squares[GREEN][TOP_RIGHT];
+                squares[GREEN][TOP_RIGHT] = squares[RED][TOP_RIGHT];
+                squares[RED][TOP_RIGHT] = squares[BLUE][TOP_RIGHT];
+                squares[BLUE][TOP_RIGHT] = tempFirstCorner;
+
+                //Remap the edge piece
+                squares[ORANGE][TOP] = squares[GREEN][TOP];
+                squares[GREEN][TOP] = squares[RED][TOP];
+                squares[RED][TOP] = squares[BLUE][TOP];
+                squares[BLUE][TOP] = tempEdge;
+
+                //Remap the second corner piece
+                squares[ORANGE][TOP_LEFT] = squares[GREEN][TOP_LEFT];
+                squares[GREEN][TOP_LEFT] = squares[RED][TOP_LEFT];
+                squares[RED][TOP_LEFT] = squares[BLUE][TOP_LEFT];
+                squares[BLUE][TOP_LEFT] = tempSecondCorner;
+            }
         }
 
         public void PrintCubeState()
         {
             for (int currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
             {
-                Debug.Log("Printing face: " + (FaceColor)currentFace);
+                var faceSquares = squares[currentFace];
 
-                for (int currentSquare = 0; currentSquare < CUBITS_PER_FACE; currentSquare++)
-                {
-                    Debug.Log("Position " + currentSquare + " is " + squares[currentFace][currentSquare]);
-                }
+                Debug.Log((FaceColor)currentFace + " Face: " + faceSquares[0] + " " + faceSquares[1] + " " + faceSquares[2] + " "
+                    + faceSquares[3] + " " + faceSquares[4] + " " + faceSquares[5] + " " + faceSquares[6] + " " + faceSquares[7]);
             }
         }
 

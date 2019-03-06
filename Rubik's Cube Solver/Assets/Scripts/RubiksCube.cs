@@ -76,6 +76,7 @@ public class RubiksCube : MonoBehaviour
                     Rotation nextRotation = randomRotations.Dequeue();
                     rubiksCube.SetRotatingFace(nextRotation.FaceColor);
                     rubiksCube.SetRotationDirection(nextRotation.Direction);
+                    rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
                     remainingRotationFrames = FRAMES_PER_ROTATION;
                 }
 
@@ -94,6 +95,8 @@ public class RubiksCube : MonoBehaviour
                     if (randomRotations.Count == 0)
                     {
                         isScrambling = false;
+
+                        rubiksCube.GetState().PrintCubeState();
                     }
                 }
             }
@@ -194,45 +197,53 @@ public class RubiksCube : MonoBehaviour
 
     public void ScrambleCube()
     {
-        //Reset the alert text
-        AlertText.text = "";
-
-        isScrambling = true;
-
-        for (int i = 0; i < ROTATIONS_PER_SCRAMBLE; i++)
-        {
-            //Select a random face
-            FaceColor selectedFace = (FaceColor)Random.Range(0, 6);
-
-            //Select a random direction
-            RotationDirection selectedDirection = Random.Range(0, 2) == 1 ? RotationDirection.Clockwise : RotationDirection.Counterclockwise;
-
-            //Add the random rotation to the queue
-            randomRotations.Enqueue(new Rotation(selectedFace, selectedDirection));
-        }
-
-        remainingRotationFrames = 0;
-    }
-
-    public void HumanSolve()
-    {
-        //If the cube is already solved, no further work needs to be done
-        if(rubiksCube.IsSolved())
-        {
-            AlertText.text = "The Rubik's Cube is already solved.";
-        }
-        else
+        //If the cube is in use, ignore the button click
+        if (!cubeIsInUse())
         {
             //Reset the alert text
             AlertText.text = "";
 
-            isSolving = true;
+            isScrambling = true;
+
+            for (int i = 0; i < ROTATIONS_PER_SCRAMBLE; i++)
+            {
+                //Select a random face
+                FaceColor selectedFace = (FaceColor)Random.Range(0, 6);
+
+                //Select a random direction
+                RotationDirection selectedDirection = Random.Range(0, 2) == 1 ? RotationDirection.Clockwise : RotationDirection.Counterclockwise;
+
+                //Add the random rotation to the queue
+                randomRotations.Enqueue(new Rotation(selectedFace, selectedDirection));
+            }
+
             remainingRotationFrames = 0;
+        }        
+    }
 
-            HumanSolver solver = new HumanSolver();
+    public void HumanSolve()
+    {
+        //If the cube is in use, ignore the button click
+        if(!cubeIsInUse())
+        {
+            //If the cube is already solved, no further work needs to be done
+            if (rubiksCube.IsSolved())
+            {
+                AlertText.text = "The Rubik's Cube is already solved.";
+            }
+            else
+            {
+                //Reset the alert text
+                AlertText.text = "";
 
-            solveRotations = solver.Solve(new CubeState());
-        }       
+                isSolving = true;
+                remainingRotationFrames = 0;
+
+                HumanSolver solver = new HumanSolver();
+
+                solveRotations = solver.Solve(rubiksCube.GetState());
+            }
+        }           
     }
 
     private bool cubeIsInUse()

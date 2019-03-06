@@ -14,6 +14,8 @@ namespace Rubiks.Solvers
             cubeState = state;
             Queue<Rotation> solutionPath = new Queue<Rotation>();
 
+            Debug.Log(state.GetAllFaces()[5][4].ToString());
+
             //Add the steps required to solve the white cross to the solution path
             Queue<Rotation> whiteCrossSteps = solveWhiteCross();
             foreach(Rotation step in whiteCrossSteps)
@@ -46,8 +48,6 @@ namespace Rubiks.Solvers
             currentStepRotations = new Queue<Rotation>();
 
             currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise));
-            //currentStepRotations.Enqueue(new Rotation(FaceColor.Red, RotationDirection.Counterclockwise));
-            //currentStepRotations.Enqueue(new Rotation(FaceColor.White, RotationDirection.Counterclockwise));
 
             //Solve the blue-white edge
 

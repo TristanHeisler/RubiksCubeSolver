@@ -163,36 +163,6 @@ namespace Rubiks
             state = new CubeState();
         }
 
-        public GameObject[,] GetBlueFaceCubes()
-        {
-            return blueFace.cubes;
-        }
-
-        public GameObject[,] GetGreenFaceCubes()
-        {
-            return greenFace.cubes;
-        }
-
-        public GameObject[,] GetOrangeFaceCubes()
-        {
-            return orangeFace.cubes;
-        }
-
-        public GameObject[,] GetRedFaceCubes()
-        {
-            return redFace.cubes;
-        }
-
-        public GameObject[,] GetYellowFaceCubes()
-        {
-            return yellowFace.cubes;
-        }
-
-        public GameObject[,] GetWhiteFaceCubes()
-        {
-            return whiteFace.cubes;
-        }
-
         public bool IsSolved()
         {
             FaceColor[][] cubeFaces = state.GetAllFaces();
@@ -247,6 +217,11 @@ namespace Rubiks
         public void UpdateState(FaceColor rotatingFace, RotationDirection direction)
         {
             state.Rotate(rotatingFace, direction);
+        }
+
+        public CubeState GetState()
+        {
+            return state;
         }
 
         public void RotateCubeFace()
