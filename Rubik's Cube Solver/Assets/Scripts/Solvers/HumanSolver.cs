@@ -1,11 +1,10 @@
 ﻿using Rubiks.Constants;
 using Rubiks.Enums;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Rubiks.Solvers
 {
-    public class HumanSolver
+    public class HumanSolver : Solver
     {
         private Queue<Rotation> currentStepRotations;
         private CubeState cube;

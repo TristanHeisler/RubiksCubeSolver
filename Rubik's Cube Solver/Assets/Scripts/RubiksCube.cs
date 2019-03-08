@@ -219,10 +219,28 @@ public class RubiksCube : MonoBehaviour
         }        
     }
 
+    public void BreadthFirstSolve()
+    {
+        Solver breadthFirstSolver = new BreadthFirstSolver();
+        Solve(breadthFirstSolver);
+    }
+
+    public void DepthFirstSolve()
+    {
+        Solver depthFirstSolver = new DepthFirstSolver();
+        Solve(depthFirstSolver);
+    }
+
     public void HumanSolve()
     {
+        Solver humanSolver = new HumanSolver();
+        Solve(humanSolver);        
+    }
+
+    private void Solve(Solver solver)
+    {
         //If the cube is in use, ignore the button click
-        if(!cubeIsInUse())
+        if (!cubeIsInUse())
         {
             //If the cube is already solved, no further work needs to be done
             if (rubiksCube.IsSolved())
@@ -234,13 +252,21 @@ public class RubiksCube : MonoBehaviour
                 //Reset the alert text
                 AlertText.text = "";
 
-                isSolving = true;
-                remainingRotationFrames = 0;
-
-                HumanSolver solver = new HumanSolver();
+                //Determine the path required to solve the cube
                 solveRotations = solver.Solve(rubiksCube.GetState());
+
+                //If a path was returned, set the variables for solving the cube
+                if(solveRotations.Count > 0)
+                {
+                    isSolving = true;
+                    remainingRotationFrames = 0;
+                }
+                else
+                {
+                    AlertText.text = "The selected solver was unable to find a solution.";
+                }
             }
-        }           
+        }
     }
 
     private bool cubeIsInUse()
