@@ -106,7 +106,8 @@ public class RubiksCube : MonoBehaviour
                     Rotation nextRotation = solveRotations.Dequeue();
                     rubiksCube.SetRotatingFace(nextRotation.FaceColor);
                     rubiksCube.SetRotationDirection(nextRotation.Direction);
-                    remainingRotationFrames = FRAMES_PER_ROTATION;
+                    rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
+                    remainingRotationFrames = FRAMES_PER_ROTATION;  
                 }
 
                 //Continue rotating
@@ -119,6 +120,7 @@ public class RubiksCube : MonoBehaviour
                 if (remainingRotationFrames == 0)
                 {
                     rubiksCube.HandleRotationRemapping();
+                    //rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
 
                     //If the rotations have completed, set the scrambling flag to false to allow cube interaction
                     if (solveRotations.Count == 0)
@@ -221,19 +223,19 @@ public class RubiksCube : MonoBehaviour
 
     public void BreadthFirstSolve()
     {
-        Solver breadthFirstSolver = new BreadthFirstSolver();
+        Solver breadthFirstSolver = new BreadthFirstSolver(rubiksCube.GetState());
         Solve(breadthFirstSolver);
     }
 
     public void DepthFirstSolve()
     {
-        Solver depthFirstSolver = new DepthFirstSolver();
+        Solver depthFirstSolver = new DepthFirstSolver(rubiksCube.GetState());
         Solve(depthFirstSolver);
     }
 
     public void HumanSolve()
     {
-        Solver humanSolver = new HumanSolver();
+        Solver humanSolver = new HumanSolver(rubiksCube.GetState());
         Solve(humanSolver);        
     }
 
@@ -253,7 +255,8 @@ public class RubiksCube : MonoBehaviour
                 AlertText.text = "";
 
                 //Determine the path required to solve the cube
-                solveRotations = solver.Solve(rubiksCube.GetState());
+                solveRotations = solver.Solve();
+                //rubiksCube.GetState().PrintCubeState();
 
                 //If a path was returned, set the variables for solving the cube
                 if(solveRotations.Count > 0)

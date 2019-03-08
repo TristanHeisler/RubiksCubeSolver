@@ -1,9 +1,14 @@
 ﻿using Rubiks.Constants;
 using Rubiks.Enums;
+using System;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace Rubiks
 {
+    [Serializable]
     public class CubeState
     {
         public const byte NUMBER_OF_FACES = 6;
@@ -22,6 +27,25 @@ namespace Rubiks
                     squares[currentFace][currentSquare] = (FaceColor)currentFace;
                 }
             }           
+        }
+
+        public bool IsSolved()
+        {
+            FaceColor[][] cubeFaces = GetAllFaces();
+
+            //If any square does not match the color of that face's center square, then the cube is not solved
+            for (int currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
+            {
+                for (int currentSquare = 0; currentSquare < CUBITS_PER_FACE; currentSquare++)
+                {
+                    if (cubeFaces[currentFace][currentSquare] != (FaceColor)currentFace)
+                    {
+                        return false;                        
+                    }
+                }
+            }
+
+            return true;
         }
 
         public void Rotate(FaceColor rotatingFace, RotationDirection direction)
@@ -422,6 +446,26 @@ namespace Rubiks
         public FaceColor[] GetYellowFace()
         {
             return squares[Colors.YELLOW];
+        }
+    }
+
+    public static class CubeStateHelper
+    {
+        public static CubeState Clone<CubeState>(this CubeState source)
+        {
+            // Don't serialize a null object, simply return the default for that object
+            if (ReferenceEquals(source, null))
+            {
+                return default(CubeState);
+            }
+
+            IFormatter formatter = new BinaryFormatter();
+            using (Stream stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, source);
+                stream.Seek(0, SeekOrigin.Begin);
+                return (CubeState)formatter.Deserialize(stream);
+            }
         }
     }
 }

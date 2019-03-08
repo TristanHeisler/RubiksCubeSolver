@@ -7,14 +7,18 @@ namespace Rubiks.Solvers
     public class HumanSolver : Solver
     {
         private Queue<Rotation> currentStepRotations;
-        private CubeState cube;
+        private CubeState givenState;
 
         private RotationDirection direction;
         private FaceColor face;
 
-        public Queue<Rotation> Solve(CubeState initialState)
+        public HumanSolver(CubeState initialState)
         {
-            cube = initialState;
+            givenState = CubeStateHelper.Clone(initialState);
+        }
+
+        public Queue<Rotation> Solve()
+        {
             Queue<Rotation> solutionPath = new Queue<Rotation>();
 
             //Add the steps required to solve the white cross to the solution path
@@ -41,7 +45,7 @@ namespace Rubiks.Solvers
             //For debugging purposes only: Ensure the returned queue is not empty
             if(solutionPath.Count == 0)
             {
-                cube.Rotate(FaceColor.Yellow, RotationDirection.Clockwise);
+                givenState.Rotate(FaceColor.Yellow, RotationDirection.Clockwise);
                 solutionPath.Enqueue(new Rotation(FaceColor.Yellow, RotationDirection.Clockwise));
             }
 
@@ -54,21 +58,18 @@ namespace Rubiks.Solvers
             currentStepRotations = new Queue<Rotation>();
 
             //Up to four loops are needed to solve each of the four white edges
-            if (cube.GetBlueFace()[Locations.RIGHT] == FaceColor.Blue && cube.GetRedFace()[Locations.LEFT] == FaceColor.White)
+            if (givenState.GetBlueFace()[Locations.RIGHT] == FaceColor.Blue && givenState.GetRedFace()[Locations.LEFT] == FaceColor.White)
             {
-                cube.Rotate(FaceColor.Blue, RotationDirection.Clockwise);
                 currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
             }
-            else if (cube.GetBlueFace()[Locations.TOP] == FaceColor.Blue && cube.GetYellowFace()[Locations.LEFT] == FaceColor.White)
+            else if (givenState.GetBlueFace()[Locations.TOP] == FaceColor.Blue && givenState.GetYellowFace()[Locations.LEFT] == FaceColor.White)
             {
-                cube.Rotate(FaceColor.Blue, RotationDirection.Clockwise);
-                cube.Rotate(FaceColor.Blue, RotationDirection.Clockwise);
+
                 currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
                 currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
             }
-            else if (cube.GetBlueFace()[Locations.LEFT] == FaceColor.Blue && cube.GetOrangeFace()[Locations.RIGHT] == FaceColor.White)
+            else if (givenState.GetBlueFace()[Locations.LEFT] == FaceColor.Blue && givenState.GetOrangeFace()[Locations.RIGHT] == FaceColor.White)
             {
-                cube.Rotate(FaceColor.Blue, RotationDirection.Counterclockwise);
                 currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise));
             }
 

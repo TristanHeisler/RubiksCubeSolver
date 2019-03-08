@@ -165,21 +165,7 @@ namespace Rubiks
 
         public bool IsSolved()
         {
-            FaceColor[][] cubeFaces = state.GetAllFaces();
-
-            //If any square does not match the color of that face's center square, then the cube is not solved
-            for(int currentFace = 0; currentFace < CubeState.NUMBER_OF_FACES; currentFace++)
-            {
-                for(int currentSquare = 0; currentSquare < CubeState.CUBITS_PER_FACE; currentSquare++)
-                {
-                    if(cubeFaces[currentFace][currentSquare] != (FaceColor)currentFace)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            return state.IsSolved();
         }
 
         public void SetRotationDirection(RotationDirection direction)

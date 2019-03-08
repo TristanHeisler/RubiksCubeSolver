@@ -7,14 +7,18 @@ namespace Rubiks.Solvers
     public class DepthFirstSolver : Solver
     {
         private Queue<Rotation> currentStepRotations;
-        private CubeState cube;
+        private CubeState givenState;
 
         private RotationDirection direction;
         private FaceColor face;
 
-        public Queue<Rotation> Solve(CubeState initialState)
+        public DepthFirstSolver(CubeState initialState)
         {
-            cube = initialState;
+            givenState = CubeStateHelper.Clone(initialState);
+        }
+
+        public Queue<Rotation> Solve()
+        {
             Queue<Rotation> solutionPath = new Queue<Rotation>();
 
             //TODO: Implement depth-first search.

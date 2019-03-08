@@ -4,6 +4,6 @@ namespace Rubiks.Solvers
 {
     public interface Solver
     {
-        Queue<Rotation> Solve(CubeState initialState);
+        Queue<Rotation> Solve();
     }
 }
