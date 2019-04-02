@@ -6,26 +6,25 @@ namespace Rubiks.Solvers
 {
     public class HumanSolver : Solver
     {
-        private Queue<Rotation> currentStepRotations;
-        private CubeState givenState;
-
-        private RotationDirection direction;
-        private FaceColor face;
+        private Queue<Rotation> _currentStepRotations;
+        private readonly CubeState _givenState;
+        private RotationDirection _direction;
+        private FaceColor _face;
 
         public HumanSolver(CubeState initialState)
         {
-            givenState = CubeStateHelper.Clone(initialState);
+            _givenState = initialState.Clone();
         }
 
-        public Queue<Rotation> Solve()
+        public Stack<Rotation> Solve()
         {
-            Queue<Rotation> solutionPath = new Queue<Rotation>();
+            var solutionPath = new Stack<Rotation>();
 
             //Add the steps required to solve the white cross to the solution path
-            Queue<Rotation> whiteCrossSteps = solveWhiteCross();
-            foreach(Rotation step in whiteCrossSteps)
+            var whiteCrossSteps = solveWhiteCross();
+            foreach(var step in whiteCrossSteps)
             {
-                solutionPath.Enqueue(step);
+                solutionPath.Push(step);
             }
 
             //Add the steps required to solve the white face to the solution path
@@ -45,8 +44,8 @@ namespace Rubiks.Solvers
             //For debugging purposes only: Ensure the returned queue is not empty
             if(solutionPath.Count == 0)
             {
-                givenState.Rotate(FaceColor.Yellow, RotationDirection.Clockwise);
-                solutionPath.Enqueue(new Rotation(FaceColor.Yellow, RotationDirection.Clockwise));
+                _givenState.Rotate(FaceColor.Yellow, RotationDirection.Clockwise);
+                solutionPath.Push(new Rotation(FaceColor.Yellow, RotationDirection.Clockwise));
             }
 
             //Return the sequence of operators that solves the cube
@@ -55,31 +54,31 @@ namespace Rubiks.Solvers
 
         private Queue<Rotation> solveWhiteCross()
         {
-            currentStepRotations = new Queue<Rotation>();
+            _currentStepRotations = new Queue<Rotation>();
 
             //Up to four loops are needed to solve each of the four white edges
-            if (givenState.GetBlueFace()[Locations.RIGHT] == FaceColor.Blue && givenState.GetRedFace()[Locations.LEFT] == FaceColor.White)
+            if (_givenState.GetBlueFace()[Locations.RIGHT] == FaceColor.Blue && _givenState.GetRedFace()[Locations.LEFT] == FaceColor.White)
             {
-                currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+                _currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
             }
-            else if (givenState.GetBlueFace()[Locations.TOP] == FaceColor.Blue && givenState.GetYellowFace()[Locations.LEFT] == FaceColor.White)
+            else if (_givenState.GetBlueFace()[Locations.TOP] == FaceColor.Blue && _givenState.GetYellowFace()[Locations.LEFT] == FaceColor.White)
             {
 
-                currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
-                currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+                _currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
+                _currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Clockwise));
             }
-            else if (givenState.GetBlueFace()[Locations.LEFT] == FaceColor.Blue && givenState.GetOrangeFace()[Locations.RIGHT] == FaceColor.White)
+            else if (_givenState.GetBlueFace()[Locations.LEFT] == FaceColor.Blue && _givenState.GetOrangeFace()[Locations.RIGHT] == FaceColor.White)
             {
-                currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise));
+                _currentStepRotations.Enqueue(new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise));
             }
 
-            return currentStepRotations;
+            return _currentStepRotations;
         }
 
         private Queue<Rotation> solveWhiteFace(CubeState cube)
         {
-            currentStepRotations = new Queue<Rotation>();
-            return currentStepRotations;
+            _currentStepRotations = new Queue<Rotation>();
+            return _currentStepRotations;
         }
     }
 }

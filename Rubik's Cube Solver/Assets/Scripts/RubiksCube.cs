@@ -15,28 +15,28 @@ public class RubiksCube : MonoBehaviour
     public Text AlertText;
 
     //The cube to be manipulated
-    private Cube rubiksCube;
+    private Cube _rubiksCube;
 
     //Variables for rotating cube faces
-    private bool isRotating = false;
-    private int remainingRotationFrames;
+    private bool _isRotating = false;
+    private int _remainingRotationFrames;
 
     //Variables for scrambling the cube
-    private bool isScrambling = false;
-    Queue<Rotation> randomRotations;
+    private bool _isScrambling = false;
+    Queue<Rotation> _randomRotations;
 
     //Variables for solving the cube
-    private bool isSolving = false;
-    Queue<Rotation> solveRotations;
+    private bool _isSolving = false;
+    Stack<Rotation> _solveRotations;
 
     //Initialization
     void Start()
     {
-        rubiksCube = GetComponent<Cube>();
-        rubiksCube.Initialize();
+        _rubiksCube = GetComponent<Cube>();
+        _rubiksCube.Initialize();
 
-        randomRotations = new Queue<Rotation>();
-        solveRotations = new Queue<Rotation>();
+        _randomRotations = new Queue<Rotation>();
+        _solveRotations = new Stack<Rotation>();
     }
 	
 	// Update is called once per frame
@@ -45,90 +45,90 @@ public class RubiksCube : MonoBehaviour
         //If the cube is in use, continue performing the appropriate action
         if(cubeIsInUse())
         {
-            if (isRotating)
+            if (_isRotating)
             {
                 //Continue rotating
-                rubiksCube.GetComponent<Cube>().RotateCubeFace();
+                _rubiksCube.GetComponent<Cube>().RotateCubeFace();
 
                 //Decrement the number of frames remaining to complete the rotation
-                remainingRotationFrames--;
+                _remainingRotationFrames--;
 
                 //If the rotation has completed, set the rotation flag to false to allow cube interaction
-                if (remainingRotationFrames == 0)
+                if (_remainingRotationFrames == 0)
                 {
-                    isRotating = false;
+                    _isRotating = false;
 
                     //Additionally, perform the appropriate cube face remappings
-                    rubiksCube.HandleRotationRemapping();
+                    _rubiksCube.HandleRotationRemapping();
 
                     //Display a message if the user solved the cube
-                    if (rubiksCube.IsSolved())
+                    if (_rubiksCube.IsSolved())
                     {
                         AlertText.text = "You solved the Rubik's Cube!";
                     }
                 }     
             }
-            else if (isScrambling)
+            else if (_isScrambling)
             {
                 //Retrieve the next element from the queue of random rotations if needed
-                if (remainingRotationFrames == 0)
+                if (_remainingRotationFrames == 0)
                 {
-                    Rotation nextRotation = randomRotations.Dequeue();
-                    rubiksCube.SetRotatingFace(nextRotation.FaceColor);
-                    rubiksCube.SetRotationDirection(nextRotation.Direction);
-                    rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
-                    remainingRotationFrames = FRAMES_PER_ROTATION;
+                    Rotation nextRotation = _randomRotations.Dequeue();
+                    _rubiksCube.SetRotatingFace(nextRotation.FaceColor);
+                    _rubiksCube.SetRotationDirection(nextRotation.Direction);
+                    _rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
+                    _remainingRotationFrames = FRAMES_PER_ROTATION;
                 }
 
                 //Continue rotating
-                rubiksCube.GetComponent<Cube>().RotateCubeFace();
+                _rubiksCube.GetComponent<Cube>().RotateCubeFace();
 
                 //Decrement the number of frames remaining to complete the rotation
-                remainingRotationFrames--;
+                _remainingRotationFrames--;
 
                 //If the current rotation has completed, handle the remapping
-                if (remainingRotationFrames == 0)
+                if (_remainingRotationFrames == 0)
                 {
-                    rubiksCube.HandleRotationRemapping();
+                    _rubiksCube.HandleRotationRemapping();
 
                     //If the rotations have completed, set the scrambling flag to false to allow cube interaction
-                    if (randomRotations.Count == 0)
+                    if (_randomRotations.Count == 0)
                     {
-                        isScrambling = false;
+                        _isScrambling = false;
                     }
                 }
             }
-            else if(isSolving)
+            else if(_isSolving)
             {
                 //Retrieve the next element from the queue of solving rotations if needed
-                if (remainingRotationFrames == 0)
+                if (_remainingRotationFrames == 0)
                 {
-                    Rotation nextRotation = solveRotations.Dequeue();
-                    rubiksCube.SetRotatingFace(nextRotation.FaceColor);
-                    rubiksCube.SetRotationDirection(nextRotation.Direction);
-                    rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
-                    remainingRotationFrames = FRAMES_PER_ROTATION;  
+                    Rotation nextRotation = _solveRotations.Pop();
+                    _rubiksCube.SetRotatingFace(nextRotation.FaceColor);
+                    _rubiksCube.SetRotationDirection(nextRotation.Direction);
+                    _rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
+                    _remainingRotationFrames = FRAMES_PER_ROTATION;  
                 }
 
                 //Continue rotating
-                rubiksCube.GetComponent<Cube>().RotateCubeFace();
+                _rubiksCube.GetComponent<Cube>().RotateCubeFace();
 
                 //Decrement the number of frames remaining to complete the rotation
-                remainingRotationFrames--;
+                _remainingRotationFrames--;
 
                 //If the current rotation has completed, handle the remapping
-                if (remainingRotationFrames == 0)
+                if (_remainingRotationFrames == 0)
                 {
-                    rubiksCube.HandleRotationRemapping();
+                    _rubiksCube.HandleRotationRemapping();
                     //rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
 
                     //If the rotations have completed, set the scrambling flag to false to allow cube interaction
-                    if (solveRotations.Count == 0)
+                    if (_solveRotations.Count == 0)
                     {
-                        isSolving = false;
+                        _isSolving = false;
 
                         //Additionally, ensure that the cube has actually been solved
-                        AlertText.text = rubiksCube.IsSolved() ? "The Rubik's Cube has been solved!" : "The Rubik's Cube was not successfully solved.";
+                        AlertText.text = _rubiksCube.IsSolved() ? "The Rubik's Cube has been solved!" : "The Rubik's Cube was not successfully solved.";
                     }
                 }
             }
@@ -143,8 +143,8 @@ public class RubiksCube : MonoBehaviour
             AlertText.text = "";
 
             //Indicate that a rotation is now occuring
-            isRotating = true;
-            remainingRotationFrames = FRAMES_PER_ROTATION;
+            _isRotating = true;
+            _remainingRotationFrames = FRAMES_PER_ROTATION;
 
             //If the shift key is pressed, the turn is counterclockwise. Otherwise, it is clockwise
             rotationDirection = Input.GetKey(KeyCode.LeftShift) ? RotationDirection.Counterclockwise : RotationDirection.Clockwise;          
@@ -181,11 +181,11 @@ public class RubiksCube : MonoBehaviour
             }
 
             //Set the parameters needed to graphically update the cube
-            rubiksCube.SetRotationDirection(rotationDirection);
-            rubiksCube.SetRotatingFace(rotatingFace);
+            _rubiksCube.SetRotationDirection(rotationDirection);
+            _rubiksCube.SetRotatingFace(rotatingFace);
 
             //Adjust the internal state of the cube
-            rubiksCube.UpdateState(rotatingFace, rotationDirection);
+            _rubiksCube.UpdateState(rotatingFace, rotationDirection);
         }     
 	}
 
@@ -203,7 +203,7 @@ public class RubiksCube : MonoBehaviour
             //Reset the alert text
             AlertText.text = "";
 
-            isScrambling = true;
+            _isScrambling = true;
 
             for (int i = 0; i < ROTATIONS_PER_SCRAMBLE; i++)
             {
@@ -214,28 +214,28 @@ public class RubiksCube : MonoBehaviour
                 RotationDirection selectedDirection = Random.Range(0, 2) == 1 ? RotationDirection.Clockwise : RotationDirection.Counterclockwise;
 
                 //Add the random rotation to the queue
-                randomRotations.Enqueue(new Rotation(selectedFace, selectedDirection));
+                _randomRotations.Enqueue(new Rotation(selectedFace, selectedDirection));
             }
 
-            remainingRotationFrames = 0;
+            _remainingRotationFrames = 0;
         }        
     }
 
     public void BreadthFirstSolve()
     {
-        Solver breadthFirstSolver = new BreadthFirstSolver(rubiksCube.GetState());
+        Solver breadthFirstSolver = new BreadthFirstSolver(_rubiksCube.GetState());
         Solve(breadthFirstSolver);
     }
 
     public void DepthFirstSolve()
     {
-        Solver depthFirstSolver = new DepthFirstSolver(rubiksCube.GetState());
+        Solver depthFirstSolver = new DepthFirstSolver(_rubiksCube.GetState());
         Solve(depthFirstSolver);
     }
 
     public void HumanSolve()
     {
-        Solver humanSolver = new HumanSolver(rubiksCube.GetState());
+        Solver humanSolver = new HumanSolver(_rubiksCube.GetState());
         Solve(humanSolver);        
     }
 
@@ -245,7 +245,7 @@ public class RubiksCube : MonoBehaviour
         if (!cubeIsInUse())
         {
             //If the cube is already solved, no further work needs to be done
-            if (rubiksCube.IsSolved())
+            if (_rubiksCube.IsSolved())
             {
                 AlertText.text = "The Rubik's Cube is already solved.";
             }
@@ -255,14 +255,12 @@ public class RubiksCube : MonoBehaviour
                 AlertText.text = "";
 
                 //Determine the path required to solve the cube
-                solveRotations = solver.Solve();
-                //rubiksCube.GetState().PrintCubeState();
-
+                _solveRotations = solver.Solve();
                 //If a path was returned, set the variables for solving the cube
-                if(solveRotations.Count > 0)
+                if(_solveRotations.Count > 0)
                 {
-                    isSolving = true;
-                    remainingRotationFrames = 0;
+                    _isSolving = true;
+                    _remainingRotationFrames = 0;
                 }
                 else
                 {
@@ -274,6 +272,6 @@ public class RubiksCube : MonoBehaviour
 
     private bool cubeIsInUse()
     {
-        return isRotating || isScrambling || isSolving;
+        return _isRotating || _isScrambling || _isSolving;
     }
 }

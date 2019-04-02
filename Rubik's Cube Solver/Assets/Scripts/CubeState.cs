@@ -16,6 +16,8 @@ namespace Rubiks
         public const byte CUBITS_PER_FACE = 8;          
 
         private readonly FaceColor[][] _squares = new FaceColor[NUMBER_OF_FACES][];
+        public CubeState parentState;
+        public Rotation rotation;
 
         public CubeState()
         {

@@ -1,5 +1,10 @@
-﻿using Rubiks.Enums;
+﻿using System;
+using System.Collections;
+using Rubiks.Enums;
 using System.Collections.Generic;
+using System.Linq;
+using System.Resources;
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace Rubiks.Solvers
@@ -16,34 +21,80 @@ namespace Rubiks.Solvers
             _givenState = initialState.Clone();
         }
 
-        public Queue<Rotation> Solve()
+        public Stack<Rotation> Solve()
         {
-            var solutionPath = new Queue<Rotation>();
-
-            //Get possible rotations
+            var solutionPath = new Stack<Rotation>();
+            
+            //Create queues
+            var open = new Queue<CubeState>();
+            var closed = new Queue<CubeState>();
+            
+            //Add the initial state
+            open.Enqueue(_givenState);
+            
+            //Retrieve the possible rotations
             var possibleRotations = CubeState.GetPossibleRotations();
 
-            //Loop through the available rotations
-            foreach (var rotation in possibleRotations)
+            //Loop as long as states remain in the open queue
+            while (open.Any())
             {
-                //Generate the child state produced by the current rotation
-                var childState = _givenState.Clone();
-                childState.Rotate(rotation.FaceColor, rotation.Direction);
-
-                //If the child state is the goal, return the current rotation
-                if (childState.IsSolved())
+                //Retrieve the first state in the queue
+                var currentState = open.Dequeue();
+                
+                //If the current state is the goal, return the list of rotations leading to the solution
+                if (currentState.IsSolved())
                 {
-                    solutionPath.Enqueue(new Rotation(rotation.FaceColor, rotation.Direction));
+                    var state = currentState;
+                    while (state.rotation != null)
+                    {
+                        solutionPath.Push(state.rotation);
+                        state = state.parentState;
+                    }
+                    
+                    return solutionPath;
                 }
+                
+                //Generate the children of the current state
+                foreach (var rotation in possibleRotations)
+                {
+                    //Generate the child state produced by the current rotation
+                    var childState = currentState.Clone();
+                    childState.Rotate(rotation.FaceColor, rotation.Direction);
+    
+                    //Check if the state is already on the open or closed list
+                    var alreadyExists = false;
+                    foreach (var existingState in open)
+                    {
+                        if (childState.EqualsState(existingState))
+                        {
+                            alreadyExists = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyExists)
+                    {
+                       foreach (var existingState in closed)
+                       {
+                           if (childState.EqualsState(existingState))
+                           {
+                               alreadyExists = true;
+                               break;
+                           }
+                       } 
+                    }
+                    
+                    //Add the child state to the open list if it does not already exist
+                    if (!alreadyExists)
+                    {
+                        childState.parentState = currentState;
+                        childState.rotation = rotation;
+                        open.Enqueue(childState);
+                    }
+                }
+                
+                //Put the current state on the closed list
+                closed.Enqueue(currentState);
             }
-
-            var one = _givenState.Clone();
-            one.Rotate(FaceColor.Blue, RotationDirection.Clockwise);
-
-            var two = _givenState.Clone();
-            two.Rotate(FaceColor.Blue, RotationDirection.Counterclockwise);
-
-            Debug.Log(one.EqualsState(two));
 
             return solutionPath;
         }

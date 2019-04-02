@@ -16,9 +16,9 @@ namespace Rubiks.Solvers
             _givenState = initialState.Clone();
         }
 
-        public Queue<Rotation> Solve()
+        public Stack<Rotation> Solve()
         {
-            var solutionPath = new Queue<Rotation>();
+            var solutionPath = new Stack<Rotation>();
 
             //TODO: Implement depth-first search.
 

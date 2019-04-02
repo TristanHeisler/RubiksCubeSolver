@@ -1,7 +1,9 @@
 ﻿using Rubiks.Enums;
+using System;
 
 namespace Rubiks
 {
+    [Serializable]
     public class Rotation
     {
         public FaceColor FaceColor;
