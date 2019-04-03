@@ -48,7 +48,7 @@ public class RubiksCube : MonoBehaviour
             if (_isRotating)
             {
                 //Continue rotating
-                _rubiksCube.GetComponent<Cube>().RotateCubeFace();
+                _rubiksCube.RotateCubeFace();
 
                 //Decrement the number of frames remaining to complete the rotation
                 _remainingRotationFrames--;
@@ -81,7 +81,7 @@ public class RubiksCube : MonoBehaviour
                 }
 
                 //Continue rotating
-                _rubiksCube.GetComponent<Cube>().RotateCubeFace();
+                _rubiksCube.RotateCubeFace();
 
                 //Decrement the number of frames remaining to complete the rotation
                 _remainingRotationFrames--;
@@ -111,7 +111,7 @@ public class RubiksCube : MonoBehaviour
                 }
 
                 //Continue rotating
-                _rubiksCube.GetComponent<Cube>().RotateCubeFace();
+                _rubiksCube.RotateCubeFace();
 
                 //Decrement the number of frames remaining to complete the rotation
                 _remainingRotationFrames--;
@@ -137,7 +137,7 @@ public class RubiksCube : MonoBehaviour
         //Otherwise, handle any potential rotation inputs
         else if (rotationKeyWasPressed())
         {
-            RotationDirection rotationDirection;
+            RotationDirection rotationDirection, oppositeDirection;
             FaceColor rotatingFace;
 
             //Reset the alert text
@@ -148,9 +148,16 @@ public class RubiksCube : MonoBehaviour
             _remainingRotationFrames = FRAMES_PER_ROTATION;
 
             //If the shift key is pressed, the turn is counterclockwise. Otherwise, it is clockwise
-            rotationDirection = Input.GetKey(KeyCode.LeftShift)
-                ? RotationDirection.Counterclockwise
-                : RotationDirection.Clockwise;
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                rotationDirection = RotationDirection.Counterclockwise;
+                oppositeDirection = RotationDirection.Clockwise;
+            }
+            else
+            {
+                rotationDirection = RotationDirection.Clockwise;
+                oppositeDirection = RotationDirection.Counterclockwise;
+            }
 
             //Blue Face Rotation
             if (Input.GetKeyDown(KeyCode.B))
@@ -187,6 +194,9 @@ public class RubiksCube : MonoBehaviour
             _rubiksCube.SetRotationDirection(rotationDirection);
             _rubiksCube.SetRotatingFace(rotatingFace);
 
+            //Push the opposite rotation to the solution stack
+            _solveRotations.Push(new Rotation(rotatingFace, oppositeDirection));
+
             //Adjust the internal state of the cube
             _rubiksCube.UpdateState(rotatingFace, rotationDirection);
         }
@@ -208,21 +218,50 @@ public class RubiksCube : MonoBehaviour
 
             _isScrambling = true;
 
-            for (int i = 0; i < ROTATIONS_PER_SCRAMBLE; i++)
+            for (var i = 0; i < ROTATIONS_PER_SCRAMBLE; i++)
             {
                 //Select a random face
-                FaceColor selectedFace = (FaceColor) Random.Range(0, 6);
+                var selectedFace = (FaceColor)Random.Range(0, 6);
+                RotationDirection selectedDirection, oppositeDirection;
 
                 //Select a random direction
-                RotationDirection selectedDirection = Random.Range(0, 2) == 1
-                    ? RotationDirection.Clockwise
-                    : RotationDirection.Counterclockwise;
+                if (Random.Range(0, 2) == 1)
+                {
+                    selectedDirection = RotationDirection.Clockwise;
+                    oppositeDirection = RotationDirection.Counterclockwise;
+                }
+                else
+                {
+                    selectedDirection = RotationDirection.Counterclockwise;
+                    oppositeDirection = RotationDirection.Clockwise;
+                }
 
                 //Add the random rotation to the queue
                 _randomRotations.Enqueue(new Rotation(selectedFace, selectedDirection));
+                
+                //Add the opposite rotation to the solution stack
+                _solveRotations.Push(new Rotation(selectedFace, oppositeDirection));
             }
 
             _remainingRotationFrames = 0;
+        }
+    }
+
+    public void RevertSolve()
+    {
+        if (!cubeIsInUse())
+        {
+            //If the cube is already solved, no further work needs to be done
+            if (_rubiksCube.IsSolved())
+            {
+                AlertText.text = "The Rubik's Cube is already solved.";
+                _solveRotations = new Stack<Rotation>();
+            }
+            else
+            {
+                _isSolving = true;
+                _remainingRotationFrames = 0;
+            }
         }
     }
 

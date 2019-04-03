@@ -36,7 +36,6 @@ namespace Rubiks.Solvers
             {
                 //Retrieve the first state in the open list
                 var currentState = open.Pop();
-                Debug.Log("Checking...");
 
                 //If the current state is the goal, return the list of rotations leading to the solution
                 if (currentState.IsSolved())
@@ -64,7 +63,6 @@ namespace Rubiks.Solvers
                     {
                         if (childState.EqualsState(existingState))
                         {
-                            Debug.Log("On Open");
                             alreadyExists = true;
                             break;
                         }
@@ -76,7 +74,6 @@ namespace Rubiks.Solvers
                         {
                             if (childState.EqualsState(existingState))
                             {
-                                Debug.Log("On Closed");
                                 alreadyExists = true;
                                 break;
                             }
