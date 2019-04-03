@@ -30,7 +30,7 @@ public class RubiksCube : MonoBehaviour
     private Stack<Rotation> _solveRotations;
 
     //Initialization
-    void Start()
+    private void Start()
     {
         _rubiksCube = GetComponent<Cube>();
         _rubiksCube.Initialize();
@@ -40,7 +40,7 @@ public class RubiksCube : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         //If the cube is in use, continue performing the appropriate action
         if (cubeIsInUse())
@@ -65,6 +65,7 @@ public class RubiksCube : MonoBehaviour
                     if (_rubiksCube.IsSolved())
                     {
                         AlertText.text = "You solved the Rubik's Cube!";
+                        _solveRotations = new Stack<Rotation>();
                     }
                 }
             }
@@ -73,7 +74,7 @@ public class RubiksCube : MonoBehaviour
                 //Retrieve the next element from the queue of random rotations if needed
                 if (_remainingRotationFrames == 0)
                 {
-                    Rotation nextRotation = _randomRotations.Dequeue();
+                    var nextRotation = _randomRotations.Dequeue();
                     _rubiksCube.SetRotatingFace(nextRotation.FaceColor);
                     _rubiksCube.SetRotationDirection(nextRotation.Direction);
                     _rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
@@ -103,7 +104,7 @@ public class RubiksCube : MonoBehaviour
                 //Retrieve the next element from the queue of solving rotations if needed
                 if (_remainingRotationFrames == 0)
                 {
-                    Rotation nextRotation = _solveRotations.Pop();
+                    var nextRotation = _solveRotations.Pop();
                     _rubiksCube.SetRotatingFace(nextRotation.FaceColor);
                     _rubiksCube.SetRotationDirection(nextRotation.Direction);
                     _rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
@@ -255,7 +256,6 @@ public class RubiksCube : MonoBehaviour
             if (_rubiksCube.IsSolved())
             {
                 AlertText.text = "The Rubik's Cube is already solved.";
-                _solveRotations = new Stack<Rotation>();
             }
             else
             {
@@ -267,23 +267,23 @@ public class RubiksCube : MonoBehaviour
 
     public void BreadthFirstSolve()
     {
-        Solver breadthFirstSolver = new BreadthFirstSolver(_rubiksCube.GetState());
+        ISolver breadthFirstSolver = new BreadthFirstSolver(_rubiksCube.GetState());
         Solve(breadthFirstSolver);
     }
 
     public void DepthFirstSolve()
     {
-        Solver depthFirstSolver = new DepthFirstSolver(_rubiksCube.GetState());
+        ISolver depthFirstSolver = new DepthFirstSolver(_rubiksCube.GetState());
         Solve(depthFirstSolver);
     }
 
     public void HumanSolve()
     {
-        Solver humanSolver = new HumanSolver(_rubiksCube.GetState());
+        ISolver humanSolver = new HumanSolver(_rubiksCube.GetState());
         Solve(humanSolver);
     }
 
-    private void Solve(Solver solver)
+    private void Solve(ISolver solver)
     {
         //If the cube is in use, ignore the button click
         if (!cubeIsInUse())

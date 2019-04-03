@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Rubiks.Solvers
 {
-    public class HumanSolver : Solver
+    public class HumanSolver : ISolver
     {
         private Queue<Rotation> _currentStepRotations;
         private readonly CubeState _givenState;

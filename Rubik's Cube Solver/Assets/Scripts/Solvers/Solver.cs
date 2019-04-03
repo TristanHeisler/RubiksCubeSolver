@@ -2,7 +2,7 @@
 
 namespace Rubiks.Solvers
 {
-    public interface Solver
+    public interface ISolver
     {
         Stack<Rotation> Solve();
     }

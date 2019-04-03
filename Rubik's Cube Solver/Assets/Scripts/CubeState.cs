@@ -13,64 +13,57 @@ namespace Rubiks
     public class CubeState
     {
         public const byte NUMBER_OF_FACES = 6;
-        public const byte CUBITS_PER_FACE = 8;          
+        public const byte CUBITS_PER_FACE = 8;
 
         private readonly FaceColor[][] _squares = new FaceColor[NUMBER_OF_FACES][];
         public CubeState parentState;
         public Rotation rotation;
+        public byte depth;
 
         public CubeState()
         {
-            for(byte currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
+            for (byte currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
             {
                 _squares[currentFace] = new FaceColor[CUBITS_PER_FACE];
 
-                for(byte currentSquare = 0; currentSquare < CUBITS_PER_FACE; currentSquare++)
+                for (byte currentSquare = 0; currentSquare < CUBITS_PER_FACE; currentSquare++)
                 {
-                    _squares[currentFace][currentSquare] = (FaceColor)currentFace;
+                    _squares[currentFace][currentSquare] = (FaceColor) currentFace;
                 }
-            }           
+            }
         }
-        
+
         public static IEnumerable<Rotation> GetPossibleRotations()
         {
-            //Blue face rotations
+            //Clockwise rotations
             yield return new Rotation(FaceColor.Blue, RotationDirection.Clockwise);
-            yield return new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise);
-
-            //Green face rotations
             yield return new Rotation(FaceColor.Green, RotationDirection.Clockwise);
-            yield return new Rotation(FaceColor.Green, RotationDirection.Counterclockwise);
-
-            //Orange face rotations
             yield return new Rotation(FaceColor.Orange, RotationDirection.Clockwise);
-            yield return new Rotation(FaceColor.Orange, RotationDirection.Counterclockwise);
-
-            //Red face rotations
             yield return new Rotation(FaceColor.Red, RotationDirection.Clockwise);
-            yield return new Rotation(FaceColor.Red, RotationDirection.Counterclockwise);
-
-            //White face rotations
             yield return new Rotation(FaceColor.White, RotationDirection.Clockwise);
-            yield return new Rotation(FaceColor.White, RotationDirection.Counterclockwise);
-
-            //Yellow face rotations
             yield return new Rotation(FaceColor.Yellow, RotationDirection.Clockwise);
+
+            //Counterclockwise rotations
+            yield return new Rotation(FaceColor.Blue, RotationDirection.Counterclockwise);
+            yield return new Rotation(FaceColor.Green, RotationDirection.Counterclockwise);
+            yield return new Rotation(FaceColor.Orange, RotationDirection.Counterclockwise);
+            yield return new Rotation(FaceColor.Red, RotationDirection.Counterclockwise);
+            yield return new Rotation(FaceColor.White, RotationDirection.Counterclockwise);
             yield return new Rotation(FaceColor.Yellow, RotationDirection.Counterclockwise);
         }
 
         public bool IsSolved()
         {
-            FaceColor[][] cubeFaces = GetAllFaces();
+            var cubeFaces = GetAllFaces();
 
             //If any square does not match the color of that face's center square, then the cube is not solved
-            for (int currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
+            for (var currentFace = 0; currentFace < NUMBER_OF_FACES; currentFace++)
             {
-                for (int currentSquare = 0; currentSquare < CUBITS_PER_FACE; currentSquare++)
+                for (var currentSquare = 0; currentSquare < CUBITS_PER_FACE; currentSquare++)
                 {
-                    if (cubeFaces[currentFace][currentSquare] != (FaceColor)currentFace)
+                    if (cubeFaces[currentFace][currentSquare] != (FaceColor) currentFace)
                     {
-                        return false;                        
+                        return false;
                     }
                 }
             }
@@ -84,7 +77,7 @@ namespace Rubiks
             rotateFace(rotatingFace, direction);
 
             //Handle the remapping of the adjacent faces
-            switch(rotatingFace)
+            switch (rotatingFace)
             {
                 case FaceColor.Blue:
                     rotateBlueAdjacentFaces(direction);
@@ -109,12 +102,12 @@ namespace Rubiks
 
         private void rotateFace(FaceColor rotatingFace, RotationDirection direction)
         {
-            var face = _squares[(byte)rotatingFace];
+            var face = _squares[(byte) rotatingFace];
 
             var tempCorner = face[Locations.TOP_LEFT];
             var tempEdge = face[Locations.TOP];
 
-            if(direction == RotationDirection.Clockwise)
+            if (direction == RotationDirection.Clockwise)
             {
                 //Remap the corners
                 face[Locations.TOP_LEFT] = face[Locations.BOTTOM_LEFT];
@@ -438,8 +431,10 @@ namespace Rubiks
             {
                 var faceSquares = _squares[currentFace];
 
-                Debug.Log((FaceColor)currentFace + " Face: " + faceSquares[0] + " " + faceSquares[1] + " " + faceSquares[2] + " "
-                    + faceSquares[3] + " " + faceSquares[4] + " " + faceSquares[5] + " " + faceSquares[6] + " " + faceSquares[7]);
+                Debug.Log((FaceColor) currentFace + " Face: " + faceSquares[0] + " " + faceSquares[1] + " " +
+                          faceSquares[2] + " "
+                          + faceSquares[3] + " " + faceSquares[4] + " " + faceSquares[5] + " " + faceSquares[6] + " " +
+                          faceSquares[7]);
             }
         }
 
@@ -494,10 +489,10 @@ namespace Rubiks
             {
                 formatter.Serialize(stream, state);
                 stream.Seek(0, SeekOrigin.Begin);
-                return (CubeState)formatter.Deserialize(stream);
+                return (CubeState) formatter.Deserialize(stream);
             }
         }
-        
+
         public static bool EqualsState(this CubeState stateOne, CubeState stateTwo)
         {
             var stateOneFaces = stateOne.GetAllFaces();
@@ -514,7 +509,7 @@ namespace Rubiks
                     }
                 }
             }
-            
+
             //Otherwise, return true
             return true;
         }
