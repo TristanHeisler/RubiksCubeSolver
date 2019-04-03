@@ -23,11 +23,11 @@ public class RubiksCube : MonoBehaviour
 
     //Variables for scrambling the cube
     private bool _isScrambling = false;
-    Queue<Rotation> _randomRotations;
+    private Queue<Rotation> _randomRotations;
 
     //Variables for solving the cube
     private bool _isSolving = false;
-    Stack<Rotation> _solveRotations;
+    private Stack<Rotation> _solveRotations;
 
     //Initialization
     void Start()
@@ -38,12 +38,12 @@ public class RubiksCube : MonoBehaviour
         _randomRotations = new Queue<Rotation>();
         _solveRotations = new Stack<Rotation>();
     }
-	
-	// Update is called once per frame
-	void Update()
+
+    // Update is called once per frame
+    void Update()
     {
         //If the cube is in use, continue performing the appropriate action
-        if(cubeIsInUse())
+        if (cubeIsInUse())
         {
             if (_isRotating)
             {
@@ -66,7 +66,7 @@ public class RubiksCube : MonoBehaviour
                     {
                         AlertText.text = "You solved the Rubik's Cube!";
                     }
-                }     
+                }
             }
             else if (_isScrambling)
             {
@@ -98,7 +98,7 @@ public class RubiksCube : MonoBehaviour
                     }
                 }
             }
-            else if(_isSolving)
+            else if (_isSolving)
             {
                 //Retrieve the next element from the queue of solving rotations if needed
                 if (_remainingRotationFrames == 0)
@@ -107,7 +107,7 @@ public class RubiksCube : MonoBehaviour
                     _rubiksCube.SetRotatingFace(nextRotation.FaceColor);
                     _rubiksCube.SetRotationDirection(nextRotation.Direction);
                     _rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
-                    _remainingRotationFrames = FRAMES_PER_ROTATION;  
+                    _remainingRotationFrames = FRAMES_PER_ROTATION;
                 }
 
                 //Continue rotating
@@ -120,7 +120,6 @@ public class RubiksCube : MonoBehaviour
                 if (_remainingRotationFrames == 0)
                 {
                     _rubiksCube.HandleRotationRemapping();
-                    //rubiksCube.UpdateState(nextRotation.FaceColor, nextRotation.Direction);
 
                     //If the rotations have completed, set the scrambling flag to false to allow cube interaction
                     if (_solveRotations.Count == 0)
@@ -128,13 +127,15 @@ public class RubiksCube : MonoBehaviour
                         _isSolving = false;
 
                         //Additionally, ensure that the cube has actually been solved
-                        AlertText.text = _rubiksCube.IsSolved() ? "The Rubik's Cube has been solved!" : "The Rubik's Cube was not successfully solved.";
+                        AlertText.text = _rubiksCube.IsSolved()
+                            ? "The Rubik's Cube has been solved!"
+                            : "The Rubik's Cube was not successfully solved.";
                     }
                 }
             }
         }
         //Otherwise, handle any potential rotation inputs
-        else if(rotationKeyWasPressed())
+        else if (rotationKeyWasPressed())
         {
             RotationDirection rotationDirection;
             FaceColor rotatingFace;
@@ -147,12 +148,14 @@ public class RubiksCube : MonoBehaviour
             _remainingRotationFrames = FRAMES_PER_ROTATION;
 
             //If the shift key is pressed, the turn is counterclockwise. Otherwise, it is clockwise
-            rotationDirection = Input.GetKey(KeyCode.LeftShift) ? RotationDirection.Counterclockwise : RotationDirection.Clockwise;          
+            rotationDirection = Input.GetKey(KeyCode.LeftShift)
+                ? RotationDirection.Counterclockwise
+                : RotationDirection.Clockwise;
 
             //Blue Face Rotation
             if (Input.GetKeyDown(KeyCode.B))
             {
-                rotatingFace = FaceColor.Blue;                
+                rotatingFace = FaceColor.Blue;
             }
             //Green Face Rotation
             else if (Input.GetKeyDown(KeyCode.G))
@@ -186,13 +189,13 @@ public class RubiksCube : MonoBehaviour
 
             //Adjust the internal state of the cube
             _rubiksCube.UpdateState(rotatingFace, rotationDirection);
-        }     
-	}
+        }
+    }
 
-    private bool rotationKeyWasPressed()
+    private static bool rotationKeyWasPressed()
     {
         return Input.GetKeyDown(KeyCode.B) || Input.GetKeyDown(KeyCode.G) || Input.GetKeyDown(KeyCode.R) ||
-            Input.GetKeyDown(KeyCode.O) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Y);
+               Input.GetKeyDown(KeyCode.O) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Y);
     }
 
     public void ScrambleCube()
@@ -208,17 +211,19 @@ public class RubiksCube : MonoBehaviour
             for (int i = 0; i < ROTATIONS_PER_SCRAMBLE; i++)
             {
                 //Select a random face
-                FaceColor selectedFace = (FaceColor)Random.Range(0, 6);
+                FaceColor selectedFace = (FaceColor) Random.Range(0, 6);
 
                 //Select a random direction
-                RotationDirection selectedDirection = Random.Range(0, 2) == 1 ? RotationDirection.Clockwise : RotationDirection.Counterclockwise;
+                RotationDirection selectedDirection = Random.Range(0, 2) == 1
+                    ? RotationDirection.Clockwise
+                    : RotationDirection.Counterclockwise;
 
                 //Add the random rotation to the queue
                 _randomRotations.Enqueue(new Rotation(selectedFace, selectedDirection));
             }
 
             _remainingRotationFrames = 0;
-        }        
+        }
     }
 
     public void BreadthFirstSolve()
@@ -236,7 +241,7 @@ public class RubiksCube : MonoBehaviour
     public void HumanSolve()
     {
         Solver humanSolver = new HumanSolver(_rubiksCube.GetState());
-        Solve(humanSolver);        
+        Solve(humanSolver);
     }
 
     private void Solve(Solver solver)
@@ -257,7 +262,7 @@ public class RubiksCube : MonoBehaviour
                 //Determine the path required to solve the cube
                 _solveRotations = solver.Solve();
                 //If a path was returned, set the variables for solving the cube
-                if(_solveRotations.Count > 0)
+                if (_solveRotations.Count > 0)
                 {
                     _isSolving = true;
                     _remainingRotationFrames = 0;

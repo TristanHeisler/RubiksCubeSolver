@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using Rubiks.Enums;
 using System.Collections.Generic;
 using System.Linq;
-using System.Resources;
-using UnityEditor.Animations;
 using UnityEngine;
 
 namespace Rubiks.Solvers
@@ -24,23 +21,24 @@ namespace Rubiks.Solvers
         public Stack<Rotation> Solve()
         {
             var solutionPath = new Stack<Rotation>();
-            
-            //Create queues
+
+            //Create open and closed lists
             var open = new Queue<CubeState>();
             var closed = new Queue<CubeState>();
-            
-            //Add the initial state
+
+            //Add the initial state to the open list
             open.Enqueue(_givenState);
-            
+
             //Retrieve the possible rotations
             var possibleRotations = CubeState.GetPossibleRotations();
 
-            //Loop as long as states remain in the open queue
+            //Loop as long as states remain in the open list
             while (open.Any())
             {
-                //Retrieve the first state in the queue
+                //Retrieve the first state in the open list
                 var currentState = open.Dequeue();
-                
+                Debug.Log("Checking...");
+
                 //If the current state is the goal, return the list of rotations leading to the solution
                 if (currentState.IsSolved())
                 {
@@ -50,39 +48,42 @@ namespace Rubiks.Solvers
                         solutionPath.Push(state.rotation);
                         state = state.parentState;
                     }
-                    
+
                     return solutionPath;
                 }
-                
+
                 //Generate the children of the current state
                 foreach (var rotation in possibleRotations)
                 {
                     //Generate the child state produced by the current rotation
                     var childState = currentState.Clone();
                     childState.Rotate(rotation.FaceColor, rotation.Direction);
-    
+
                     //Check if the state is already on the open or closed list
                     var alreadyExists = false;
                     foreach (var existingState in open)
                     {
                         if (childState.EqualsState(existingState))
                         {
+                            Debug.Log("On Open");
                             alreadyExists = true;
                             break;
                         }
                     }
+
                     if (!alreadyExists)
                     {
-                       foreach (var existingState in closed)
-                       {
-                           if (childState.EqualsState(existingState))
-                           {
-                               alreadyExists = true;
-                               break;
-                           }
-                       } 
+                        foreach (var existingState in closed)
+                        {
+                            if (childState.EqualsState(existingState))
+                            {
+                                Debug.Log("On Closed");
+                                alreadyExists = true;
+                                break;
+                            }
+                        }
                     }
-                    
+
                     //Add the child state to the open list if it does not already exist
                     if (!alreadyExists)
                     {
@@ -91,7 +92,7 @@ namespace Rubiks.Solvers
                         open.Enqueue(childState);
                     }
                 }
-                
+
                 //Put the current state on the closed list
                 closed.Enqueue(currentState);
             }
