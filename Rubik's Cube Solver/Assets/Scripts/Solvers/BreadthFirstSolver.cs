@@ -1,8 +1,8 @@
-﻿using System;
-using Rubiks.Enums;
+﻿using Rubiks.Enums;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Priority_Queue;
 using UnityEngine;
 
 namespace Rubiks.Solvers
