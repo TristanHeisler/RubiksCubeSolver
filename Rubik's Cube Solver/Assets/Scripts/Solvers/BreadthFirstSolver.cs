@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Priority_Queue;
 using UnityEngine;
 
 namespace Rubiks.Solvers
 {
     public class BreadthFirstSolver : ISolver
     {
-        private const byte MAX_DEPTH = 6;
+        private const byte MAX_DEPTH = 5;
 
         private Queue<Rotation> _currentStepRotations;
         private readonly CubeState _givenState;
@@ -43,19 +42,6 @@ namespace Rubiks.Solvers
                     //Retrieve the first state in the open list
                     var currentState = open.Dequeue();
 
-                    //If the current state is the goal, return the list of rotations leading to the solution
-                    if (currentState.IsSolved())
-                    {
-                        var state = currentState;
-                        while (state.rotation != null)
-                        {
-                            solutionPath.Push(state.rotation);
-                            state = state.parentState;
-                        }
-
-                        return solutionPath;
-                    }
-
                     //Generate the children of the current state if the maximum search depth has not been reached
                     if (currentState.depth <= MAX_DEPTH)
                     {
@@ -64,6 +50,21 @@ namespace Rubiks.Solvers
                             //Generate the child state produced by the current rotation
                             var childState = currentState.Clone();
                             childState.Rotate(rotation.FaceColor, rotation.Direction);
+                            
+                            //If the generated state is the goal, return the list of rotations leading to the solution
+                            if (childState.IsSolved())
+                            {
+                                solutionPath.Push(rotation);
+                                
+                                var previousState = currentState;
+                                while (previousState.rotation != null)
+                                {
+                                    solutionPath.Push(previousState.rotation);
+                                    previousState = previousState.parentState;
+                                }
+
+                                return solutionPath;
+                            }
 
                             //Check if the state is already on the open or closed list
                             var alreadyExists = false;
