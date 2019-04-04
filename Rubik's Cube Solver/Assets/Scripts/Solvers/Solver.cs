@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Rubiks.Solvers
 {
     public interface ISolver
     {
-        Stack<Rotation> Solve();
+        Task<Stack<Rotation>> Solve();
     }
 }

@@ -2,6 +2,7 @@
 using Rubiks.Enums;
 using Rubiks.Solvers;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +27,7 @@ public class RubiksCube : MonoBehaviour
     private Queue<Rotation> _randomRotations;
 
     //Variables for solving the cube
+    private bool _isSearching = false;
     private bool _isSolving = false;
     private Stack<Rotation> _solveRotations;
 
@@ -265,25 +267,25 @@ public class RubiksCube : MonoBehaviour
         }
     }
 
-    public void BreadthFirstSolve()
+    public async void BreadthFirstSolve()
     {
         ISolver breadthFirstSolver = new BreadthFirstSolver(_rubiksCube.GetState());
-        Solve(breadthFirstSolver);
+        await Solve(breadthFirstSolver);
     }
 
-    public void DepthFirstSolve()
+    public async void DepthFirstSolve()
     {
         ISolver depthFirstSolver = new DepthFirstSolver(_rubiksCube.GetState());
-        Solve(depthFirstSolver);
+        await Solve(depthFirstSolver);
     }
 
-    public void HumanSolve()
+    public async void HumanSolve()
     {
         ISolver humanSolver = new HumanSolver(_rubiksCube.GetState());
-        Solve(humanSolver);
+        await Solve(humanSolver);
     }
 
-    private void Solve(ISolver solver)
+    private async Task Solve(ISolver solver)
     {
         //If the cube is in use, ignore the button click
         if (!cubeIsInUse())
@@ -297,9 +299,12 @@ public class RubiksCube : MonoBehaviour
             {
                 //Reset the alert text
                 AlertText.text = "";
+                
+                //Set the searching flag
+                _isSearching = true;
 
                 //Determine the path required to solve the cube
-                _solveRotations = solver.Solve();
+                _solveRotations = await solver.Solve();
                 //If a path was returned, set the variables for solving the cube
                 if (_solveRotations.Count > 0)
                 {
@@ -310,12 +315,14 @@ public class RubiksCube : MonoBehaviour
                 {
                     AlertText.text = "The selected solver was unable to find a solution.";
                 }
+
+                _isSearching = false;
             }
         }
     }
 
     private bool cubeIsInUse()
     {
-        return _isRotating || _isScrambling || _isSolving;
+        return _isRotating || _isScrambling || _isSearching || _isSolving;
     }
 }
