@@ -6,7 +6,7 @@ namespace Rubiks
 {
     public class Cube : MonoBehaviour
     {
-        public const int ROTATION_SPEED = 90;
+        public const int ROTATION_SPEED = 15;
 
         //Objects to represent the physical cube in the game
         //8 Corner Cubes
