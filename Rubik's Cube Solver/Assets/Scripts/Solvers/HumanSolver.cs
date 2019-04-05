@@ -61,13 +61,18 @@ namespace Rubiks.Solvers
                 //Add the steps required to solve the yellow cross
                 var yellowCrossSteps = solveYellowCross();
 
-                //Add the steps required to solve the yellow corners
-
+                //Add the steps required to solve the yellow face
+                var yellowFaceSteps = solveYellowFace();
 
                 //Add the steps required to solve the yellow edges
 
 
                 //Return the sequence of operators that solves the cube
+                foreach (var step in yellowFaceSteps)
+                {
+                    solutionPath.Push(step);
+                }
+                
                 foreach (var step in yellowCrossSteps)
                 {
                     solutionPath.Push(step);
@@ -1118,6 +1123,41 @@ namespace Rubiks.Solvers
                 rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                 rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                 rotateAndAdd(RED, COUNTER_CLOCKWISE);
+            }
+
+            return _currentStepRotations;
+        }
+
+        private bool yellowFaceIsSolved()
+        {
+            return _state.GetYellowFace()[TOP_RIGHT] == YELLOW
+                   && _state.GetYellowFace()[BOTTOM_RIGHT] == YELLOW
+                   && _state.GetYellowFace()[BOTTOM_LEFT] == YELLOW
+                   && _state.GetYellowFace()[TOP_LEFT] == YELLOW;
+        }
+        
+        private IEnumerable<Rotation> solveYellowFace()
+        {
+            _currentStepRotations = new Stack<Rotation>();
+
+            var count = 20;
+            while (!yellowFaceIsSolved() && count > 0)
+            {
+                count--;
+                
+                if (_state.GetYellowFace()[BOTTOM_RIGHT] == YELLOW)
+                {
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                }
+
+                rotateAndAdd(GREEN, CLOCKWISE);
+                rotateAndAdd(YELLOW, CLOCKWISE);
+                rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                rotateAndAdd(YELLOW, CLOCKWISE);
+                rotateAndAdd(GREEN, CLOCKWISE);
+                rotateAndAdd(YELLOW, CLOCKWISE);
+                rotateAndAdd(YELLOW, CLOCKWISE);
+                rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
             }
 
             return _currentStepRotations;
