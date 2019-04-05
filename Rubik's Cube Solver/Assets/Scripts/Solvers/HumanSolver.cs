@@ -59,7 +59,7 @@ namespace Rubiks.Solvers
                 var middleLayerSteps = solveMiddleLayer();
 
                 //Add the steps required to solve the yellow cross
-
+                var yellowCrossSteps = solveYellowCross();
 
                 //Add the steps required to solve the yellow corners
 
@@ -68,6 +68,11 @@ namespace Rubiks.Solvers
 
 
                 //Return the sequence of operators that solves the cube
+                foreach (var step in yellowCrossSteps)
+                {
+                    solutionPath.Push(step);
+                }
+                
                 foreach (var step in middleLayerSteps)
                 {
                     solutionPath.Push(step);
@@ -918,12 +923,9 @@ namespace Rubiks.Solvers
         private IEnumerable<Rotation> solveMiddleLayer()
         {
             _currentStepRotations = new Stack<Rotation>();
-            var count = 20;
-            while (!middleLayerIsSolved() && count > 0)
+
+            while (!middleLayerIsSolved())
             {
-                Debug.Log(middleLayerIsSolved());
-                count--;
-                
                 if (_state.GetRedFace()[TOP] == RED && _state.GetYellowFace()[BOTTOM] != YELLOW)
                 {
                     if (_state.GetYellowFace()[BOTTOM] == BLUE)
@@ -1085,6 +1087,37 @@ namespace Rubiks.Solvers
                 }
 
                 rotateAndAdd(YELLOW, CLOCKWISE);
+            }
+
+            return _currentStepRotations;
+        }
+
+        private bool yellowCrossIsSolved()
+        {
+            return _state.GetYellowFace()[TOP] == YELLOW
+                   && _state.GetYellowFace()[RIGHT] == YELLOW
+                   && _state.GetYellowFace()[BOTTOM] == YELLOW
+                   && _state.GetYellowFace()[LEFT] == YELLOW;
+        }
+
+        private IEnumerable<Rotation> solveYellowCross()
+        {
+            _currentStepRotations = new Stack<Rotation>();
+
+            while (!yellowCrossIsSolved())
+            {
+                if (_state.GetYellowFace()[BOTTOM] == YELLOW 
+                    && (_state.GetYellowFace()[LEFT] == YELLOW || _state.GetYellowFace()[TOP] == YELLOW))
+                {
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                }
+
+                rotateAndAdd(RED, CLOCKWISE);
+                rotateAndAdd(GREEN, CLOCKWISE);
+                rotateAndAdd(YELLOW, CLOCKWISE);
+                rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                rotateAndAdd(RED, COUNTER_CLOCKWISE);
             }
 
             return _currentStepRotations;
