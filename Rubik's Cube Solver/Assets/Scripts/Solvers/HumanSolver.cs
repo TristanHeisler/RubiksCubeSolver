@@ -2,6 +2,7 @@
 using Rubiks.Constants;
 using Rubiks.Enums;
 using System.Collections.Generic;
+using System.Diagnostics.SymbolStore;
 using System.Runtime.Serialization.Formatters;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -55,7 +56,7 @@ namespace Rubiks.Solvers
                 var whiteFaceSteps = solveWhiteFace();
 
                 //Determine the steps required to solve the middle layer
-
+                var middleLayerSteps = solveMiddleLayer();
 
                 //Add the steps required to solve the yellow cross
 
@@ -67,16 +68,21 @@ namespace Rubiks.Solvers
 
 
                 //Return the sequence of operators that solves the cube
+                foreach (var step in middleLayerSteps)
+                {
+                    solutionPath.Push(step);
+                }
+
                 foreach (var step in whiteFaceSteps)
                 {
                     solutionPath.Push(step);
                 }
-                
+
                 foreach (var step in whiteCrossSteps)
                 {
                     solutionPath.Push(step);
                 }
-                
+
                 return solutionPath;
             });
         }
@@ -98,7 +104,7 @@ namespace Rubiks.Solvers
         private IEnumerable<Rotation> solveWhiteCross()
         {
             _currentStepRotations = new Stack<Rotation>();
-            
+
             while (!whiteCrossIsSolved())
             {
                 if (_state.GetWhiteFace()[TOP] == WHITE && _state.GetRedFace()[BOTTOM] != RED)
@@ -696,7 +702,7 @@ namespace Rubiks.Solvers
 
             return _currentStepRotations;
         }
-        
+
         private bool whiteFaceIsSolved()
         {
             return (_state.GetWhiteFace()[TOP_RIGHT] == WHITE && _state.GetRedFace()[BOTTOM_RIGHT] == RED)
@@ -709,11 +715,8 @@ namespace Rubiks.Solvers
         {
             _currentStepRotations = new Stack<Rotation>();
 
-            var max = 20;
-            while (!whiteFaceIsSolved() && max > 0)
+            while (!whiteFaceIsSolved())
             {
-                max--;
-                
                 if (_state.GetRedFace()[TOP_RIGHT] == WHITE)
                 {
                     Debug.Log("Red top right");
@@ -747,7 +750,7 @@ namespace Rubiks.Solvers
 
                     continue;
                 }
-                
+
                 if (_state.GetRedFace()[TOP_LEFT] == WHITE)
                 {
                     Debug.Log("Red top left");
@@ -778,7 +781,7 @@ namespace Rubiks.Solvers
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             break;
                     }
-                    
+
                     continue;
                 }
 
@@ -791,7 +794,7 @@ namespace Rubiks.Solvers
                     rotateAndAdd(RED, CLOCKWISE);
                     continue;
                 }
-                
+
                 if ((_state.GetWhiteFace()[BOTTOM_RIGHT] == WHITE && _state.GetGreenFace()[BOTTOM_RIGHT] != GREEN)
                     || _state.GetGreenFace()[BOTTOM_RIGHT] == WHITE)
                 {
@@ -801,7 +804,7 @@ namespace Rubiks.Solvers
                     rotateAndAdd(GREEN, CLOCKWISE);
                     continue;
                 }
-                
+
                 if ((_state.GetWhiteFace()[BOTTOM_LEFT] == WHITE && _state.GetOrangeFace()[BOTTOM_RIGHT] != ORANGE)
                     || _state.GetOrangeFace()[BOTTOM_RIGHT] == WHITE)
                 {
@@ -811,7 +814,7 @@ namespace Rubiks.Solvers
                     rotateAndAdd(ORANGE, CLOCKWISE);
                     continue;
                 }
-                
+
                 if ((_state.GetWhiteFace()[TOP_LEFT] == WHITE && _state.GetBlueFace()[BOTTOM_RIGHT] != BLUE)
                     || _state.GetBlueFace()[BOTTOM_RIGHT] == WHITE)
                 {
@@ -821,7 +824,7 @@ namespace Rubiks.Solvers
                     rotateAndAdd(BLUE, CLOCKWISE);
                     continue;
                 }
-                
+
                 if (_state.GetRedFace()[BOTTOM_LEFT] == WHITE)
                 {
                     Debug.Log("Red bottom left");
@@ -829,8 +832,8 @@ namespace Rubiks.Solvers
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(RED, COUNTER_CLOCKWISE);
                     continue;
-                } 
-                
+                }
+
                 if (_state.GetGreenFace()[BOTTOM_LEFT] == WHITE)
                 {
                     Debug.Log("Green bottom left");
@@ -838,8 +841,8 @@ namespace Rubiks.Solvers
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                     continue;
-                } 
-                
+                }
+
                 if (_state.GetOrangeFace()[BOTTOM_LEFT] == WHITE)
                 {
                     Debug.Log("Orange bottom left");
@@ -847,8 +850,8 @@ namespace Rubiks.Solvers
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                     continue;
-                } 
-                
+                }
+
                 if (_state.GetBlueFace()[BOTTOM_LEFT] == WHITE)
                 {
                     Debug.Log("Blue bottom left");
@@ -865,8 +868,8 @@ namespace Rubiks.Solvers
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(RED, CLOCKWISE);
                     continue;
-                } 
-                
+                }
+
                 if (_state.GetYellowFace()[BOTTOM_LEFT] == WHITE && _state.GetWhiteFace()[TOP_LEFT] != WHITE)
                 {
                     Debug.Log("Yellow bottom left");
@@ -874,8 +877,8 @@ namespace Rubiks.Solvers
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(BLUE, CLOCKWISE);
                     continue;
-                } 
-                
+                }
+
                 if (_state.GetYellowFace()[TOP_LEFT] == WHITE && _state.GetWhiteFace()[BOTTOM_LEFT] != WHITE)
                 {
                     Debug.Log("Yellow top left");
@@ -883,8 +886,8 @@ namespace Rubiks.Solvers
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(ORANGE, CLOCKWISE);
                     continue;
-                } 
-                
+                }
+
                 if (_state.GetYellowFace()[TOP_RIGHT] == WHITE && _state.GetWhiteFace()[BOTTOM_RIGHT] != WHITE)
                 {
                     Debug.Log("Yellow top right");
@@ -899,6 +902,189 @@ namespace Rubiks.Solvers
                     Debug.Log("Rotating yellow clockwise");
                     rotateAndAdd(YELLOW, CLOCKWISE);
                 }
+            }
+
+            return _currentStepRotations;
+        }
+
+        private bool middleLayerIsSolved()
+        {
+            return (_state.GetRedFace()[LEFT] == RED && _state.GetRedFace()[RIGHT] == RED)
+                   && (_state.GetGreenFace()[LEFT] == GREEN && _state.GetGreenFace()[RIGHT] == GREEN)
+                   && (_state.GetOrangeFace()[LEFT] == ORANGE && _state.GetOrangeFace()[RIGHT] == ORANGE)
+                   && (_state.GetBlueFace()[LEFT] == BLUE && _state.GetBlueFace()[RIGHT] == BLUE);
+        }
+
+        private IEnumerable<Rotation> solveMiddleLayer()
+        {
+            _currentStepRotations = new Stack<Rotation>();
+            var count = 20;
+            while (!middleLayerIsSolved() && count > 0)
+            {
+                Debug.Log(middleLayerIsSolved());
+                count--;
+                
+                if (_state.GetRedFace()[TOP] == RED && _state.GetYellowFace()[BOTTOM] != YELLOW)
+                {
+                    if (_state.GetYellowFace()[BOTTOM] == BLUE)
+                    {
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(BLUE, CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(RED, CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    }
+                    else
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(GREEN, CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(RED, CLOCKWISE);
+                    }
+
+                    continue;
+                }
+
+                if (_state.GetGreenFace()[TOP] == GREEN && _state.GetYellowFace()[RIGHT] != YELLOW)
+                {
+                    if (_state.GetYellowFace()[RIGHT] == RED)
+                    {
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(RED, CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(GREEN, CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                    }
+                    else
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(ORANGE, CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(GREEN, CLOCKWISE);
+                    }
+
+                    continue;
+                }
+
+                if (_state.GetOrangeFace()[TOP] == ORANGE && _state.GetYellowFace()[TOP] != YELLOW)
+                {
+                    if (_state.GetYellowFace()[TOP] == GREEN)
+                    {
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(GREEN, CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(ORANGE, CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    }
+                    else
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(BLUE, CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(ORANGE, CLOCKWISE);
+                    }
+
+                    continue;
+                }
+
+                if (_state.GetBlueFace()[TOP] == BLUE && _state.GetYellowFace()[LEFT] != YELLOW)
+                {
+                    if (_state.GetYellowFace()[LEFT] == ORANGE)
+                    {
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(ORANGE, CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(BLUE, CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                    }
+                    else
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(RED, CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                        rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(BLUE, CLOCKWISE);
+                    }
+
+                    continue;
+                }
+
+                if (_state.GetRedFace()[RIGHT] == GREEN && _state.GetGreenFace()[LEFT] == RED)
+                {
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                    rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                    rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                }
+
+                if (_state.GetGreenFace()[RIGHT] == ORANGE && _state.GetOrangeFace()[LEFT] == GREEN)
+                {
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                    rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                    rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                }
+
+                if (_state.GetOrangeFace()[RIGHT] == BLUE && _state.GetBlueFace()[LEFT] == ORANGE)
+                {
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                    rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                    rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                }
+
+                if (_state.GetBlueFace()[RIGHT] == RED && _state.GetRedFace()[LEFT] == BLUE)
+                {
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                    rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
+                    rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                }
+
+                rotateAndAdd(YELLOW, CLOCKWISE);
             }
 
             return _currentStepRotations;
