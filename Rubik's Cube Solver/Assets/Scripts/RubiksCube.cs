@@ -10,7 +10,7 @@ public class RubiksCube : MonoBehaviour
 {
     //Constants
     private const int FRAMES_PER_ROTATION = 90 / Cube.ROTATION_SPEED;
-    private const int ROTATIONS_PER_SCRAMBLE = 50;
+    private const int ROTATIONS_PER_SCRAMBLE = 10;
 
     //User interface elements
     public Text AlertText;
@@ -305,6 +305,7 @@ public class RubiksCube : MonoBehaviour
 
                 //Determine the path required to solve the cube
                 _solveRotations = await solver.Solve();
+                
                 //If a path was returned, set the variables for solving the cube
                 if (_solveRotations.Count > 0)
                 {
