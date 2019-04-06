@@ -37,6 +37,7 @@ namespace Rubiks.Solvers
         private readonly CubeState _state;
         private RotationDirection _direction;
         private FaceColor _face;
+        private bool _isError = false;
 
         public HumanSolver(CubeState initialState)
         {
@@ -53,16 +54,16 @@ namespace Rubiks.Solvers
                 var whiteCrossSteps = solveWhiteCross();
 
                 //Determine the steps required to solve the white face
-                var whiteFaceSteps = solveWhiteFace();
+                var whiteFaceSteps = !_isError ? solveWhiteFace() : new Stack<Rotation>();
 
                 //Determine the steps required to solve the middle layer
-                var middleLayerSteps = solveMiddleLayer();
+                var middleLayerSteps = !_isError ? solveMiddleLayer() : new Stack<Rotation>();
 
                 //Add the steps required to solve the yellow cross
-                var yellowCrossSteps = solveYellowCross();
+                var yellowCrossSteps = !_isError ? solveYellowCross() : new Stack<Rotation>();
 
                 //Add the steps required to solve the yellow face
-                var yellowFaceSteps = solveYellowFace();
+                var yellowFaceSteps = !_isError ? solveYellowFace() : new Stack<Rotation>();
 
                 //Add the steps required to solve the yellow edges
 
@@ -115,8 +116,11 @@ namespace Rubiks.Solvers
         {
             _currentStepRotations = new Stack<Rotation>();
 
-            while (!whiteCrossIsSolved())
+            var count = 0;
+            while (!whiteCrossIsSolved() && count < 20)
             {
+                count--;
+                
                 if (_state.GetWhiteFace()[TOP] == WHITE && _state.GetRedFace()[BOTTOM] != RED)
                 {
                     switch (_state.GetRedFace()[BOTTOM])
@@ -710,6 +714,11 @@ namespace Rubiks.Solvers
                 }
             }
 
+            if (!whiteCrossIsSolved())
+            {
+                Debug.Log("Error solving white cross.");
+            }
+            
             return _currentStepRotations;
         }
 
@@ -725,8 +734,11 @@ namespace Rubiks.Solvers
         {
             _currentStepRotations = new Stack<Rotation>();
 
-            while (!whiteFaceIsSolved())
+            var count = 0;
+            while (!whiteFaceIsSolved() && count < 20)
             {
+                count++;
+                
                 if (_state.GetRedFace()[TOP_RIGHT] == WHITE)
                 {
                     Debug.Log("Red top right");
@@ -914,6 +926,11 @@ namespace Rubiks.Solvers
                 }
             }
 
+            if (!whiteFaceIsSolved())
+            {
+                Debug.Log("Error solving white face.");
+            }
+
             return _currentStepRotations;
         }
 
@@ -929,8 +946,11 @@ namespace Rubiks.Solvers
         {
             _currentStepRotations = new Stack<Rotation>();
 
-            while (!middleLayerIsSolved())
+            var count = 0;
+            while (!middleLayerIsSolved() && count < 20)
             {
+                count++;
+                
                 if (_state.GetRedFace()[TOP] == RED && _state.GetYellowFace()[BOTTOM] != YELLOW)
                 {
                     if (_state.GetYellowFace()[BOTTOM] == BLUE)
@@ -1043,7 +1063,8 @@ namespace Rubiks.Solvers
                     continue;
                 }
 
-                if (_state.GetRedFace()[RIGHT] == GREEN && _state.GetGreenFace()[LEFT] == RED)
+                if ((_state.GetRedFace()[RIGHT] != RED && _state.GetRedFace()[RIGHT] != YELLOW)
+                    || (_state.GetGreenFace()[LEFT] != GREEN && _state.GetGreenFace()[LEFT] != YELLOW))
                 {
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(GREEN, CLOCKWISE);
@@ -1053,9 +1074,11 @@ namespace Rubiks.Solvers
                     rotateAndAdd(RED, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(RED, CLOCKWISE);
+                    continue;
                 }
 
-                if (_state.GetGreenFace()[RIGHT] == ORANGE && _state.GetOrangeFace()[LEFT] == GREEN)
+                if (_state.GetGreenFace()[RIGHT] != GREEN && _state.GetGreenFace()[RIGHT] != YELLOW
+                    || _state.GetOrangeFace()[LEFT] != ORANGE && _state.GetOrangeFace()[LEFT] != YELLOW)
                 {
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(ORANGE, CLOCKWISE);
@@ -1065,9 +1088,11 @@ namespace Rubiks.Solvers
                     rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(GREEN, CLOCKWISE);
+                    continue;
                 }
 
-                if (_state.GetOrangeFace()[RIGHT] == BLUE && _state.GetBlueFace()[LEFT] == ORANGE)
+                if (_state.GetOrangeFace()[RIGHT] != ORANGE && _state.GetOrangeFace()[RIGHT] != YELLOW
+                    || _state.GetBlueFace()[LEFT] != BLUE && _state.GetBlueFace()[LEFT] != YELLOW)
                 {
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(BLUE, CLOCKWISE);
@@ -1077,9 +1102,11 @@ namespace Rubiks.Solvers
                     rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(ORANGE, CLOCKWISE);
+                    continue;
                 }
 
-                if (_state.GetBlueFace()[RIGHT] == RED && _state.GetRedFace()[LEFT] == BLUE)
+                if (_state.GetBlueFace()[RIGHT] != BLUE && _state.GetBlueFace()[RIGHT] != YELLOW
+                    || _state.GetRedFace()[LEFT] != RED && _state.GetRedFace()[LEFT] != YELLOW)
                 {
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(RED, CLOCKWISE);
@@ -1089,11 +1116,17 @@ namespace Rubiks.Solvers
                     rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(BLUE, CLOCKWISE);
+                    continue;
                 }
 
                 rotateAndAdd(YELLOW, CLOCKWISE);
             }
 
+            if (!middleLayerIsSolved())
+            {
+                Debug.Log("Error solving middle layer.");
+            }
+            
             return _currentStepRotations;
         }
 
@@ -1109,8 +1142,11 @@ namespace Rubiks.Solvers
         {
             _currentStepRotations = new Stack<Rotation>();
 
-            while (!yellowCrossIsSolved())
+            var count = 0;
+            while (!yellowCrossIsSolved() && count < 20)
             {
+                count++;
+                
                 if (_state.GetYellowFace()[BOTTOM] == YELLOW 
                     && (_state.GetYellowFace()[LEFT] == YELLOW || _state.GetYellowFace()[TOP] == YELLOW))
                 {
@@ -1123,6 +1159,11 @@ namespace Rubiks.Solvers
                 rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                 rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                 rotateAndAdd(RED, COUNTER_CLOCKWISE);
+            }
+            
+            if (!yellowCrossIsSolved())
+            {
+                Debug.Log("Error solving yellow cross.");
             }
 
             return _currentStepRotations;
@@ -1140,10 +1181,10 @@ namespace Rubiks.Solvers
         {
             _currentStepRotations = new Stack<Rotation>();
 
-            var count = 20;
-            while (!yellowFaceIsSolved() && count > 0)
+            var count = 0;
+            while (!yellowFaceIsSolved() && count < 20)
             {
-                count--;
+                count++;
                 
                 if (_state.GetYellowFace()[BOTTOM_RIGHT] == YELLOW)
                 {
@@ -1158,6 +1199,11 @@ namespace Rubiks.Solvers
                 rotateAndAdd(YELLOW, CLOCKWISE);
                 rotateAndAdd(YELLOW, CLOCKWISE);
                 rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+            }
+            
+            if (!yellowFaceIsSolved())
+            {
+                Debug.Log("Error solving yellow face.");
             }
 
             return _currentStepRotations;
