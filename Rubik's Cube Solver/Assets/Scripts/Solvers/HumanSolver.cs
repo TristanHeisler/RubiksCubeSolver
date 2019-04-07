@@ -143,14 +143,12 @@ namespace Rubiks.Solvers
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved blue. White top");
                             break;
                         case GREEN:
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved green. White top");
                             break;
                         case ORANGE:
                             rotateAndAdd(RED, CLOCKWISE);
@@ -159,7 +157,6 @@ namespace Rubiks.Solvers
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved orange. White top");
                             break;
                     }
 
@@ -177,21 +174,18 @@ namespace Rubiks.Solvers
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved blue. White right");
                             break;
                         case ORANGE:
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved orange. White right");
                             break;
                         case RED:
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved red. White right");
                             break;
                     }
 
@@ -207,14 +201,12 @@ namespace Rubiks.Solvers
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved blue. White bottom");
                             break;
                         case GREEN:
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved green. White bottom");
                             break;
                         case RED:
                             rotateAndAdd(ORANGE, CLOCKWISE);
@@ -223,7 +215,6 @@ namespace Rubiks.Solvers
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved red. White bottom");
                             break;
                     }
 
@@ -241,21 +232,18 @@ namespace Rubiks.Solvers
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved green. White left");
                             break;
                         case ORANGE:
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved orange. White left");
                             break;
                         case RED:
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved red. White left");
                             break;
                     }
 
@@ -269,26 +257,22 @@ namespace Rubiks.Solvers
                         case BLUE:
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(BLUE, CLOCKWISE);
-                            Debug.Log("Solved blue. Red bottom");
                             break;
                         case GREEN:
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved green. Red bottom");
                             break;
                         case ORANGE:
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved orange. Red bottom");
                             break;
                         case RED:
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved red. Red bottom");
                             break;
                     }
 
@@ -304,24 +288,20 @@ namespace Rubiks.Solvers
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved blue. Green bottom");
                             break;
                         case GREEN:
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved green. Green bottom");
                             break;
                         case ORANGE:
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved orange. Green bottom");
                             break;
                         case RED:
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(RED, CLOCKWISE);
-                            Debug.Log("Solved red. Green bottom");
                             break;
                     }
 
@@ -335,26 +315,22 @@ namespace Rubiks.Solvers
                         case BLUE:
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved blue. Orange bottom");
                             break;
                         case GREEN:
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
-                            Debug.Log("Solved green. Orange bottom");
                             break;
                         case ORANGE:
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved orange. Orange bottom");
                             break;
                         case RED:
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved red. Orange bottom");
                             break;
                     }
 
@@ -370,24 +346,20 @@ namespace Rubiks.Solvers
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved blue. Blue bottom");
                             break;
                         case GREEN:
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved green. Blue bottom");
                             break;
                         case ORANGE:
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(ORANGE, CLOCKWISE);
-                            Debug.Log("Solved orange. Blue bottom");
                             break;
                         case RED:
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved red. Blue bottom");
                             break;
                     }
 
@@ -400,7 +372,6 @@ namespace Rubiks.Solvers
                     {
                         case BLUE:
                             rotateAndAdd(BLUE, CLOCKWISE);
-                            Debug.Log("Solved blue. Red left");
                             break;
                         case GREEN:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
@@ -408,19 +379,16 @@ namespace Rubiks.Solvers
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved green. Red left");
                             break;
                         case ORANGE:
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved white. Red left");
                             break;
                         case RED:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved red. Red left");
                             break;
                     }
 
@@ -435,17 +403,14 @@ namespace Rubiks.Solvers
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved blue. Blue left");
                             break;
                         case GREEN:
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved green. Blue left");
                             break;
                         case ORANGE:
                             rotateAndAdd(ORANGE, CLOCKWISE);
-                            Debug.Log("Solved orange. Blue left");
                             break;
                         case RED:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
@@ -453,7 +418,6 @@ namespace Rubiks.Solvers
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved red. Blue left");
                             break;
                     }
 
@@ -470,23 +434,19 @@ namespace Rubiks.Solvers
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved blue. Orange left");
                             break;
                         case GREEN:
                             rotateAndAdd(GREEN, CLOCKWISE);
-                            Debug.Log("Solved green. Orange left");
                             break;
                         case ORANGE:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved orange. Orange left");
                             break;
                         case RED:
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved red. Orange left");
                             break;
                     }
 
@@ -501,13 +461,11 @@ namespace Rubiks.Solvers
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved blue. Green left");
                             break;
                         case GREEN:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved green. Green left");
                             break;
                         case ORANGE:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
@@ -515,11 +473,9 @@ namespace Rubiks.Solvers
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved orange. Green left");
                             break;
                         case RED:
                             rotateAndAdd(RED, CLOCKWISE);
-                            Debug.Log("Solved red. Green left");
                             break;
                     }
 
@@ -536,23 +492,19 @@ namespace Rubiks.Solvers
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved blue. Red right");
                             break;
                         case GREEN:
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved green. Red right");
                             break;
                         case ORANGE:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved orange. Red right");
                             break;
                         case RED:
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved red. Red right");
                             break;
                     }
 
@@ -567,13 +519,11 @@ namespace Rubiks.Solvers
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved blue. Blue right");
                             break;
                         case GREEN:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved green. Blue right");
                             break;
                         case ORANGE:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
@@ -581,11 +531,9 @@ namespace Rubiks.Solvers
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved orange. Blue right");
                             break;
                         case RED:
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved red. Blue right");
                             break;
                     }
 
@@ -598,7 +546,6 @@ namespace Rubiks.Solvers
                     {
                         case BLUE:
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved blue. Orange right");
                             break;
                         case GREEN:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
@@ -606,19 +553,16 @@ namespace Rubiks.Solvers
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved green. Orange right");
                             break;
                         case ORANGE:
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved orange. Orange right");
                             break;
                         case RED:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved red. Orange right");
                             break;
                     }
 
@@ -633,17 +577,14 @@ namespace Rubiks.Solvers
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved blue. Green right");
                             break;
                         case GREEN:
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved green. Green right");
                             break;
                         case ORANGE:
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved orange. Green right");
                             break;
                         case RED:
                             rotateAndAdd(WHITE, COUNTER_CLOCKWISE);
@@ -651,7 +592,6 @@ namespace Rubiks.Solvers
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
                             rotateAndAdd(WHITE, CLOCKWISE);
-                            Debug.Log("Solved red. Green right");
                             break;
                     }
 
@@ -666,27 +606,23 @@ namespace Rubiks.Solvers
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(RED, CLOCKWISE);
-                            Debug.Log("Solved blue. Red top");
                             break;
                         case GREEN:
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(RED, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved green. Red top");
                             break;
                         case ORANGE:
                             rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
-                            Debug.Log("Solved orange. Red top");
                             break;
                         case RED:
                             rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
-                            Debug.Log("Solved red. Red top");
                             break;
                     }
                 }
@@ -698,31 +634,26 @@ namespace Rubiks.Solvers
                             rotateAndAdd(YELLOW, CLOCKWISE);
                             rotateAndAdd(BLUE, CLOCKWISE);
                             rotateAndAdd(BLUE, CLOCKWISE);
-                            Debug.Log("Solved blue. Yellow bottom");
                             break;
                         case GREEN:
                             rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
                             rotateAndAdd(GREEN, CLOCKWISE);
-                            Debug.Log("Solved green. Yellow bottom");
                             break;
                         case ORANGE:
                             rotateAndAdd(YELLOW, CLOCKWISE);
                             rotateAndAdd(YELLOW, CLOCKWISE);
                             rotateAndAdd(ORANGE, CLOCKWISE);
                             rotateAndAdd(ORANGE, CLOCKWISE);
-                            Debug.Log("Solved orange. Yellow bottom");
                             break;
                         case RED:
                             rotateAndAdd(RED, CLOCKWISE);
                             rotateAndAdd(RED, CLOCKWISE);
-                            Debug.Log("Solved red. Yellow bottom");
                             break;
                     }
                 }
                 else
                 {
-                    Debug.Log("Rotating yellow clockwise");
                     rotateAndAdd(YELLOW, CLOCKWISE);
                 }
             }
@@ -755,7 +686,6 @@ namespace Rubiks.Solvers
                 
                 if (_state.GetRedFace()[TOP_RIGHT] == WHITE)
                 {
-                    Debug.Log("Red top right");
                     switch (_state.GetYellowFace()[BOTTOM_RIGHT])
                     {
                         case BLUE:
@@ -789,7 +719,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetRedFace()[TOP_LEFT] == WHITE)
                 {
-                    Debug.Log("Red top left");
                     switch (_state.GetYellowFace()[BOTTOM_LEFT])
                     {
                         case BLUE:
@@ -822,9 +751,8 @@ namespace Rubiks.Solvers
                 }
 
                 if ((_state.GetWhiteFace()[TOP_RIGHT] == WHITE && _state.GetRedFace()[BOTTOM_RIGHT] != RED)
-                    || _state.GetRedFace()[BOTTOM_RIGHT] == WHITE)
+                    || (_state.GetRedFace()[BOTTOM_RIGHT] == WHITE && _state.GetOrangeFace()[TOP_RIGHT] != WHITE))
                 {
-                    Debug.Log("White top right");
                     rotateAndAdd(RED, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(RED, CLOCKWISE);
@@ -832,9 +760,8 @@ namespace Rubiks.Solvers
                 }
 
                 if ((_state.GetWhiteFace()[BOTTOM_RIGHT] == WHITE && _state.GetGreenFace()[BOTTOM_RIGHT] != GREEN)
-                    || _state.GetGreenFace()[BOTTOM_RIGHT] == WHITE)
+                    || (_state.GetGreenFace()[BOTTOM_RIGHT] == WHITE && _state.GetBlueFace()[TOP_RIGHT] != WHITE))
                 {
-                    Debug.Log("White bottom right");
                     rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(GREEN, CLOCKWISE);
@@ -842,9 +769,8 @@ namespace Rubiks.Solvers
                 }
 
                 if ((_state.GetWhiteFace()[BOTTOM_LEFT] == WHITE && _state.GetOrangeFace()[BOTTOM_RIGHT] != ORANGE)
-                    || _state.GetOrangeFace()[BOTTOM_RIGHT] == WHITE)
+                    || (_state.GetOrangeFace()[BOTTOM_RIGHT] == WHITE && _state.GetRedFace()[TOP_RIGHT] != WHITE))
                 {
-                    Debug.Log("White bottom left");
                     rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(ORANGE, CLOCKWISE);
@@ -852,9 +778,8 @@ namespace Rubiks.Solvers
                 }
 
                 if ((_state.GetWhiteFace()[TOP_LEFT] == WHITE && _state.GetBlueFace()[BOTTOM_RIGHT] != BLUE)
-                    || _state.GetBlueFace()[BOTTOM_RIGHT] == WHITE)
+                    || (_state.GetBlueFace()[BOTTOM_RIGHT] == WHITE && _state.GetGreenFace()[TOP_RIGHT] != WHITE))
                 {
-                    Debug.Log("White top left");
                     rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(BLUE, CLOCKWISE);
@@ -863,7 +788,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetRedFace()[BOTTOM_LEFT] == WHITE)
                 {
-                    Debug.Log("Red bottom left");
                     rotateAndAdd(RED, CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(RED, COUNTER_CLOCKWISE);
@@ -872,7 +796,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetGreenFace()[BOTTOM_LEFT] == WHITE)
                 {
-                    Debug.Log("Green bottom left");
                     rotateAndAdd(GREEN, CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
@@ -881,7 +804,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetOrangeFace()[BOTTOM_LEFT] == WHITE)
                 {
-                    Debug.Log("Orange bottom left");
                     rotateAndAdd(ORANGE, CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
@@ -890,7 +812,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetBlueFace()[BOTTOM_LEFT] == WHITE)
                 {
-                    Debug.Log("Blue bottom left");
                     rotateAndAdd(BLUE, CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
@@ -899,7 +820,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetYellowFace()[BOTTOM_RIGHT] == WHITE && _state.GetWhiteFace()[TOP_RIGHT] != WHITE)
                 {
-                    Debug.Log("Yellow bottom right");
                     rotateAndAdd(RED, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(RED, CLOCKWISE);
@@ -908,7 +828,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetYellowFace()[BOTTOM_LEFT] == WHITE && _state.GetWhiteFace()[TOP_LEFT] != WHITE)
                 {
-                    Debug.Log("Yellow bottom left");
                     rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(BLUE, CLOCKWISE);
@@ -917,7 +836,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetYellowFace()[TOP_LEFT] == WHITE && _state.GetWhiteFace()[BOTTOM_LEFT] != WHITE)
                 {
-                    Debug.Log("Yellow top left");
                     rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(ORANGE, CLOCKWISE);
@@ -926,7 +844,6 @@ namespace Rubiks.Solvers
 
                 if (_state.GetYellowFace()[TOP_RIGHT] == WHITE && _state.GetWhiteFace()[BOTTOM_RIGHT] != WHITE)
                 {
-                    Debug.Log("Yellow top right");
                     rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                     rotateAndAdd(GREEN, CLOCKWISE);
@@ -935,7 +852,6 @@ namespace Rubiks.Solvers
 
                 if (!whiteFaceIsSolved())
                 {
-                    Debug.Log("Rotating yellow clockwise");
                     rotateAndAdd(YELLOW, CLOCKWISE);
                 }
             }
@@ -1220,10 +1136,45 @@ namespace Rubiks.Solvers
             while (!yellowFaceIsSolved() && count < 20)
             {
                 count++;
-                
+
+                var cornerMatches = 0;
+                if (_state.GetYellowFace()[TOP_LEFT] == YELLOW)
+                {
+                    cornerMatches++;
+                }
+                if (_state.GetYellowFace()[TOP_RIGHT] == YELLOW)
+                {
+                    cornerMatches++;
+                }
+                if (_state.GetYellowFace()[BOTTOM_LEFT] == YELLOW)
+                {
+                    cornerMatches++;
+                }
                 if (_state.GetYellowFace()[BOTTOM_RIGHT] == YELLOW)
                 {
-                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    cornerMatches++;
+                }
+                
+                if (cornerMatches == 0)
+                {
+                    while (_state.GetBlueFace()[TOP_RIGHT] != YELLOW)
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                    }
+                }
+                else if (cornerMatches == 1)
+                {
+                    while(_state.GetYellowFace()[BOTTOM_LEFT] != YELLOW)
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                    }
+                }
+                else
+                {
+                    while (_state.GetRedFace()[TOP_LEFT] != YELLOW)
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                    }
                 }
 
                 rotateAndAdd(GREEN, CLOCKWISE);

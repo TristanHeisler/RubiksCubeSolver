@@ -8,7 +8,7 @@ namespace Rubiks.Solvers
 {
     public class DepthFirstSolver : ISolver
     {
-        private const byte MAX_DEPTH = 5;
+        private const byte MAX_DEPTH = 3;
 
         private Queue<Rotation> _currentStepRotations;
         private readonly CubeState _givenState;
@@ -25,6 +25,8 @@ namespace Rubiks.Solvers
         {
             return await Task.Run(() =>
             {
+                Debug.Log("Start");
+                
                 var solutionPath = new Stack<Rotation>();
 
                 //Create open and closed lists
@@ -36,12 +38,19 @@ namespace Rubiks.Solvers
 
                 //Retrieve the possible rotations
                 var possibleRotations = CubeState.GetPossibleRotations();
+                var count = 1;
 
                 //Loop as long as states remain in the open list
                 while (open.Any())
                 {
                     //Retrieve the first state in the open list
                     var currentState = open.Pop();
+                    Debug.Log("Dequeueing " + count++ +". Depth is " + currentState.depth);
+                    
+                    if (count == 25000)
+                    {
+                        return solutionPath;
+                    }
 
                     //Generate the children of the current state if the maximum search depth has not been reached
                     if (currentState.depth <= MAX_DEPTH)
@@ -64,6 +73,8 @@ namespace Rubiks.Solvers
                                     previousState = previousState.parentState;
                                 }
 
+                                Debug.Log("End");
+                                
                                 return solutionPath;
                             }
 

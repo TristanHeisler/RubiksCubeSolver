@@ -8,7 +8,7 @@ namespace Rubiks.Solvers
 {
     public class BreadthFirstSolver : ISolver
     {
-        private const byte MAX_DEPTH = 5;
+        private const byte MAX_DEPTH = 3;
 
         private Queue<Rotation> _currentStepRotations;
         private readonly CubeState _givenState;
@@ -24,6 +24,8 @@ namespace Rubiks.Solvers
         {
             return await Task.Run(() =>
             {
+                Debug.Log("Start");
+                
                 var solutionPath = new Stack<Rotation>();
 
                 //Create open and closed lists
@@ -35,17 +37,25 @@ namespace Rubiks.Solvers
 
                 //Retrieve the possible rotations
                 var possibleRotations = CubeState.GetPossibleRotations();
-
+                var count = 1;
+                
                 //Loop as long as states remain in the open list
                 while (open.Any())
                 {
                     //Retrieve the first state in the open list
                     var currentState = open.Dequeue();
-
+                    Debug.Log("Dequeueing " + count++ +". Depth is " + currentState.depth);
+                    
+                    if (count == 1000)
+                    {
+                        return solutionPath;
+                    }
+                    
                     //Generate the children of the current state if the maximum search depth has not been reached
+                    var enumerable = possibleRotations as Rotation[] ?? possibleRotations.ToArray();
                     if (currentState.depth <= MAX_DEPTH)
                     {
-                        foreach (var rotation in possibleRotations)
+                        foreach (var rotation in enumerable)
                         {
                             //Generate the child state produced by the current rotation
                             var childState = currentState.Clone();
@@ -62,6 +72,8 @@ namespace Rubiks.Solvers
                                     solutionPath.Push(previousState.rotation);
                                     previousState = previousState.parentState;
                                 }
+                                
+                                Debug.Log("End");
 
                                 return solutionPath;
                             }
@@ -94,6 +106,7 @@ namespace Rubiks.Solvers
                             {
                                 childState.parentState = currentState;
                                 childState.rotation = rotation;
+                                childState.depth = (byte)(currentState.depth + 1);
                                 open.Enqueue(childState);
                             }
                         }
@@ -102,7 +115,7 @@ namespace Rubiks.Solvers
                     //Put the current state on the closed list
                     closed.Enqueue(currentState);
                 }
-
+                
                 //If no solution was found, return the empty list
                 return solutionPath;
             });
