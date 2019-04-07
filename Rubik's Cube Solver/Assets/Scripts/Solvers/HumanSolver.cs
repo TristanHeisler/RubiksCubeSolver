@@ -65,10 +65,23 @@ namespace Rubiks.Solvers
                 //Add the steps required to solve the yellow face
                 var yellowFaceSteps = !_isError ? solveYellowFace() : new Stack<Rotation>();
 
+                //Add the steps required to solve the yellow corners
+                var yellowCornerSteps = !_isError ? solveYellowCorners() : new Stack<Rotation>();
+                
                 //Add the steps required to solve the yellow edges
-
+                var yellowEdgeSteps = !_isError ? solveYellowEdges() : new Stack<Rotation>();
 
                 //Return the sequence of operators that solves the cube
+                foreach (var step in yellowEdgeSteps)
+                {
+                    solutionPath.Push(step);
+                }
+                
+                foreach (var step in yellowCornerSteps)
+                {
+                    solutionPath.Push(step);
+                }
+                
                 foreach (var step in yellowFaceSteps)
                 {
                     solutionPath.Push(step);
@@ -717,6 +730,7 @@ namespace Rubiks.Solvers
             if (!whiteCrossIsSolved())
             {
                 Debug.Log("Error solving white cross.");
+                _isError = true;
             }
             
             return _currentStepRotations;
@@ -929,6 +943,7 @@ namespace Rubiks.Solvers
             if (!whiteFaceIsSolved())
             {
                 Debug.Log("Error solving white face.");
+                _isError = true;
             }
 
             return _currentStepRotations;
@@ -1063,6 +1078,15 @@ namespace Rubiks.Solvers
                     continue;
                 }
 
+                if ((_state.GetRedFace()[TOP] != YELLOW && _state.GetYellowFace()[BOTTOM] != YELLOW)
+                    || (_state.GetGreenFace()[TOP] != YELLOW && _state.GetYellowFace()[RIGHT] != YELLOW)
+                    || (_state.GetOrangeFace()[TOP] != YELLOW && _state.GetYellowFace()[TOP] != YELLOW)
+                    || (_state.GetBlueFace()[TOP] != YELLOW && _state.GetYellowFace()[LEFT] != YELLOW))
+                {
+                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    continue;
+                }
+
                 if ((_state.GetRedFace()[RIGHT] != RED && _state.GetRedFace()[RIGHT] != YELLOW)
                     || (_state.GetGreenFace()[LEFT] != GREEN && _state.GetGreenFace()[LEFT] != YELLOW))
                 {
@@ -1116,15 +1140,13 @@ namespace Rubiks.Solvers
                     rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
                     rotateAndAdd(YELLOW, CLOCKWISE);
                     rotateAndAdd(BLUE, CLOCKWISE);
-                    continue;
                 }
-
-                rotateAndAdd(YELLOW, CLOCKWISE);
             }
 
             if (!middleLayerIsSolved())
             {
                 Debug.Log("Error solving middle layer.");
+                _isError = true;
             }
             
             return _currentStepRotations;
@@ -1147,10 +1169,22 @@ namespace Rubiks.Solvers
             {
                 count++;
                 
-                if (_state.GetYellowFace()[BOTTOM] == YELLOW 
-                    && (_state.GetYellowFace()[LEFT] == YELLOW || _state.GetYellowFace()[TOP] == YELLOW))
+                if (_state.GetYellowFace()[BOTTOM] == YELLOW)
                 {
-                    rotateAndAdd(YELLOW, CLOCKWISE);
+                    if (_state.GetYellowFace()[LEFT] == YELLOW || _state.GetYellowFace()[TOP] == YELLOW)
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                    }
+                    else if (_state.GetYellowFace()[RIGHT] == YELLOW)
+                    {
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                        rotateAndAdd(YELLOW, CLOCKWISE);
+                    }
+                }
+
+                if (_state.GetYellowFace()[TOP] == YELLOW && _state.GetYellowFace()[RIGHT] == YELLOW)
+                {
+                    rotateAndAdd(YELLOW, COUNTER_CLOCKWISE);
                 }
 
                 rotateAndAdd(RED, CLOCKWISE);
@@ -1164,6 +1198,7 @@ namespace Rubiks.Solvers
             if (!yellowCrossIsSolved())
             {
                 Debug.Log("Error solving yellow cross.");
+                _isError = true;
             }
 
             return _currentStepRotations;
@@ -1204,6 +1239,228 @@ namespace Rubiks.Solvers
             if (!yellowFaceIsSolved())
             {
                 Debug.Log("Error solving yellow face.");
+                _isError = true;
+            }
+
+            return _currentStepRotations;
+        }
+
+        private bool yellowCornersAreSolved()
+        {
+            return (_state.GetRedFace()[TOP_LEFT] == RED && _state.GetRedFace()[TOP_RIGHT] == RED)
+                   && (_state.GetGreenFace()[TOP_LEFT] == GREEN && _state.GetGreenFace()[TOP_RIGHT] == GREEN)
+                   && (_state.GetOrangeFace()[TOP_LEFT] == ORANGE && _state.GetOrangeFace()[TOP_RIGHT] == ORANGE)
+                   && (_state.GetBlueFace()[TOP_LEFT] == BLUE && _state.GetBlueFace()[TOP_RIGHT] == BLUE);
+        }
+
+        private IEnumerable<Rotation> solveYellowCorners()
+        {
+            _currentStepRotations = new Stack<Rotation>();
+
+            var count = 0;
+            while (!yellowCornersAreSolved() && count < 20)
+            {
+                count++;
+
+                if (_state.GetRedFace()[TOP_LEFT] == RED 
+                    && (_state.GetRedFace()[TOP_RIGHT] == RED || _state.GetOrangeFace()[TOP_LEFT] == ORANGE))
+                {
+                    rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    continue;
+                }
+
+                if (_state.GetGreenFace()[TOP_LEFT] == GREEN 
+                    && (_state.GetGreenFace()[TOP_RIGHT] == GREEN || _state.GetBlueFace()[TOP_LEFT] == BLUE))
+                {
+                    rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    continue;
+                }
+                
+                if (_state.GetOrangeFace()[TOP_LEFT] == ORANGE 
+                    && (_state.GetOrangeFace()[TOP_RIGHT] == ORANGE || _state.GetRedFace()[TOP_LEFT] == RED))
+                {
+                    rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    continue;
+                }
+                
+                if (_state.GetBlueFace()[TOP_LEFT] == BLUE 
+                    && (_state.GetBlueFace()[TOP_RIGHT] == BLUE || _state.GetGreenFace()[TOP_LEFT] == GREEN))
+                {
+                    rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                    rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    continue;
+                }
+                
+                rotateAndAdd(YELLOW, CLOCKWISE);
+            }
+            
+            if (!yellowCornersAreSolved())
+            {
+                Debug.Log("Error solving yellow corners.");
+                _isError = true;
+            }
+
+            return _currentStepRotations;
+        }
+
+        private bool yellowEdgesAreSolved()
+        {
+            return _state.GetRedFace()[TOP] == RED
+                   && _state.GetGreenFace()[TOP] == GREEN
+                   && _state.GetOrangeFace()[TOP] == ORANGE
+                   && _state.GetBlueFace()[TOP] == BLUE;
+        }
+
+        private IEnumerable<Rotation> solveYellowEdges()
+        {
+            _currentStepRotations = new Stack<Rotation>();
+
+            var count = 0;
+            while (!yellowEdgesAreSolved() && count < 20)
+            {
+                count++;
+
+                if (_state.GetRedFace()[TOP] == RED && (_state.GetBlueFace()[TOP] == ORANGE || _state.GetGreenFace()[TOP] == ORANGE))
+                {
+                    var yellowRotation = _state.GetBlueFace()[TOP] == ORANGE ? CLOCKWISE : COUNTER_CLOCKWISE;
+                    
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(YELLOW, yellowRotation);
+                    rotateAndAdd(GREEN , CLOCKWISE);
+                    rotateAndAdd(BLUE , COUNTER_CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(GREEN , COUNTER_CLOCKWISE);
+                    rotateAndAdd(BLUE , CLOCKWISE);
+                    rotateAndAdd(YELLOW, yellowRotation);
+                    rotateAndAdd(ORANGE , CLOCKWISE);
+                    rotateAndAdd(ORANGE , CLOCKWISE);
+                    
+                    continue;
+                }
+                
+                if (_state.GetGreenFace()[TOP] == GREEN && (_state.GetRedFace()[TOP] == BLUE || _state.GetOrangeFace()[TOP] == BLUE))
+                {
+                    var yellowRotation = _state.GetRedFace()[TOP] == BLUE ? CLOCKWISE : COUNTER_CLOCKWISE;
+                    
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(YELLOW, yellowRotation);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(YELLOW, yellowRotation);
+                    rotateAndAdd(BLUE , CLOCKWISE);
+                    rotateAndAdd(BLUE , CLOCKWISE);
+                    
+                    continue;
+                }
+                
+                if (_state.GetOrangeFace()[TOP] == ORANGE && (_state.GetGreenFace()[TOP] == RED || _state.GetBlueFace()[TOP] == RED))
+                {
+                    var yellowRotation = _state.GetGreenFace()[TOP] == RED ? CLOCKWISE : COUNTER_CLOCKWISE;
+                    
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(YELLOW, yellowRotation);
+                    rotateAndAdd(BLUE, CLOCKWISE);
+                    rotateAndAdd(GREEN, COUNTER_CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(BLUE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(YELLOW, yellowRotation);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    
+                    continue;
+                }
+                
+                if (_state.GetBlueFace()[TOP] == BLUE && (_state.GetOrangeFace()[TOP] == GREEN || _state.GetRedFace()[TOP] == GREEN))
+                {
+                    var yellowRotation = _state.GetOrangeFace()[TOP] == GREEN ? CLOCKWISE : COUNTER_CLOCKWISE;
+                    
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(YELLOW, yellowRotation);
+                    rotateAndAdd(RED, CLOCKWISE);
+                    rotateAndAdd(ORANGE, COUNTER_CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(RED, COUNTER_CLOCKWISE);
+                    rotateAndAdd(ORANGE, CLOCKWISE);
+                    rotateAndAdd(YELLOW, yellowRotation);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+                    rotateAndAdd(GREEN, CLOCKWISE);
+
+                    continue;
+                }
+                
+                rotateAndAdd(ORANGE, CLOCKWISE);
+                rotateAndAdd(ORANGE, CLOCKWISE);
+                rotateAndAdd(YELLOW, CLOCKWISE);
+                rotateAndAdd(GREEN , CLOCKWISE);
+                rotateAndAdd(BLUE , COUNTER_CLOCKWISE);
+                rotateAndAdd(ORANGE, CLOCKWISE);
+                rotateAndAdd(ORANGE, CLOCKWISE);
+                rotateAndAdd(GREEN , COUNTER_CLOCKWISE);
+                rotateAndAdd(BLUE , CLOCKWISE);
+                rotateAndAdd(YELLOW, CLOCKWISE);
+                rotateAndAdd(ORANGE , CLOCKWISE);
+                rotateAndAdd(ORANGE , CLOCKWISE);
+            }
+            
+            if (!yellowEdgesAreSolved())
+            {
+                Debug.Log("Error solving yellow edges.");
+                _isError = true;
             }
 
             return _currentStepRotations;
