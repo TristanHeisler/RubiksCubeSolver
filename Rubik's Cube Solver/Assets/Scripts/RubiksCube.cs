@@ -12,10 +12,13 @@ public class RubiksCube : MonoBehaviour
 {
     //Constants
     private const int FRAMES_PER_ROTATION = 90 / Cube.ROTATION_SPEED;
-    private const int ROTATIONS_PER_SCRAMBLE = 10;
+    private const int ROTATIONS_PER_SCRAMBLE = 20;
 
     //User interface elements
-    public Text AlertText;
+    public Text Status;
+    public Text GeneratedStates;
+    public Text RequiredMoves;
+    public Text TimeTaken;
 
     //The cube to be manipulated
     private Cube _rubiksCube;
@@ -68,7 +71,7 @@ public class RubiksCube : MonoBehaviour
                     //Display a message if the user solved the cube
                     if (_rubiksCube.IsSolved())
                     {
-                        AlertText.text = "You solved the Rubik's Cube!";
+                        Status.text = "You solved the Rubik's Cube!";
                         _solveRotations = new Stack<Rotation>();
                     }
                 }
@@ -100,6 +103,7 @@ public class RubiksCube : MonoBehaviour
                     if (_randomRotations.Count == 0)
                     {
                         _isScrambling = false;
+                        Status.text = "The Rubik's Cube has been scrambled.";
                     }
                 }
             }
@@ -132,7 +136,7 @@ public class RubiksCube : MonoBehaviour
                         _isSolving = false;
 
                         //Additionally, ensure that the cube has actually been solved
-                        AlertText.text = _rubiksCube.IsSolved()
+                        Status.text = _rubiksCube.IsSolved()
                             ? "The Rubik's Cube has been solved!"
                             : "The Rubik's Cube was not successfully solved.";
                     }
@@ -145,8 +149,11 @@ public class RubiksCube : MonoBehaviour
             RotationDirection rotationDirection, oppositeDirection;
             FaceColor rotatingFace;
 
-            //Reset the alert text
-            AlertText.text = "";
+            //Reset the status and statistics text
+            Status.text = "";
+            GeneratedStates.text = "";
+            RequiredMoves.text = "";
+            TimeTaken.text = "";
 
             //Indicate that a rotation is now occuring
             _isRotating = true;
@@ -218,8 +225,13 @@ public class RubiksCube : MonoBehaviour
         //If the cube is in use, ignore the button click
         if (!cubeIsInUse())
         {
-            //Reset the alert text
-            AlertText.text = "";
+            //Indicate that the cube is being scrambled
+            Status.text = "Scrambling the Rubik's Cube...";
+            
+            //Reset the statistics text
+            GeneratedStates.text = "";
+            RequiredMoves.text = "";
+            TimeTaken.text = "";
 
             _isScrambling = true;
 
@@ -259,19 +271,17 @@ public class RubiksCube : MonoBehaviour
             //If the cube is already solved, no further work needs to be done
             if (_rubiksCube.IsSolved())
             {
-                AlertText.text = "The Rubik's Cube is already solved.";
+                Status.text = "The Rubik's Cube is already solved.";
             }
             else
             {
-                var generatedStates = _solveRotations.Count;
-                var requiredMoves = _solveRotations.Count;
-                var time = new TimeSpan();
-                string elapsedTime = $"{time.Seconds}.{time.Milliseconds:000} seconds";
+                //Update the user interface
+                GeneratedStates.text = $"Generated States: { _solveRotations.Count}";
+                RequiredMoves.text = $"Required Moves: {_solveRotations.Count}";
+                var timeTaken = new TimeSpan();
+                TimeTaken.text = $"Time Taken: {timeTaken.Seconds}.{timeTaken.Milliseconds:000}s";
                 
-                Debug.Log("Generated: " + generatedStates);
-                Debug.Log("Moves: " + requiredMoves);
-                Debug.Log("Time: " + elapsedTime);
-                
+                //Begin solving
                 _isSolving = true;
                 _remainingRotationFrames = 0;
             }
@@ -280,6 +290,7 @@ public class RubiksCube : MonoBehaviour
 
     public async void BreadthFirstSolve()
     {
+        Status.text = "Blah";
         ISolver breadthFirstSolver = new BreadthFirstSolver(_rubiksCube.GetState());
         await Solve(breadthFirstSolver);
     }
@@ -304,37 +315,33 @@ public class RubiksCube : MonoBehaviour
             //If the cube is already solved, no further work needs to be done
             if (_rubiksCube.IsSolved())
             {
-                AlertText.text = "The Rubik's Cube is already solved.";
+                Status.text = "The Rubik's Cube is already solved.";
             }
             else
             {
-                //Reset the alert text
-                AlertText.text = "";
-                
                 //Set the searching flag
                 _isSearching = true;
 
                 //Determine the path required to solve the cube
                 var solution = await solver.Solve();
                 _solveRotations = solution.Item1;
-                var generatedStates = solution.Item2;
-                var requiredMoves = _solveRotations.Count;
-                var time = solution.Item3;
-                string elapsedTime = $"{time.Seconds}.{time.Milliseconds:000} seconds";
                 
-                Debug.Log("Generated: " + generatedStates);
-                Debug.Log("Moves: " + requiredMoves);
-                Debug.Log("Time: " + elapsedTime);
+                //Update the user interface
+                GeneratedStates.text = $"Generated States: { solution.Item2}";
+                RequiredMoves.text = $"Required Moves: {_solveRotations.Count}";
+                var timeTaken = solution.Item3;
+                TimeTaken.text = $"Time Taken: {timeTaken.Seconds}.{timeTaken.Milliseconds:000}s";
                 
                 //If a path was returned, set the variables for solving the cube
                 if (_solveRotations.Count > 0)
                 {
                     _isSolving = true;
                     _remainingRotationFrames = 0;
+                    Status.text = "Displaying the solution moves...";
                 }
                 else
                 {
-                    AlertText.text = "The selected solver was unable to find a solution.";
+                    Status.text = "The selected solver was unable to find a solution.";
                 }
 
                 _isSearching = false;
