@@ -2,13 +2,15 @@
 using Rubiks.Constants;
 using Rubiks.Enums;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.SymbolStore;
 using System.Runtime.Serialization.Formatters;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.Experimental.PlayerLoop;
+using Debug = UnityEngine.Debug;
 
 namespace Rubiks.Solvers
 {
@@ -38,16 +40,22 @@ namespace Rubiks.Solvers
         private RotationDirection _direction;
         private FaceColor _face;
         private bool _isError = false;
+        private Stopwatch _stopwatch;
+        private int _generatedStates;
 
         public HumanSolver(CubeState initialState)
         {
             _state = initialState.Clone();
+            _generatedStates = 0;
+            _stopwatch = new Stopwatch();
         }
 
-        public async Task<Stack<Rotation>> Solve()
+        public async Task<Tuple<Stack<Rotation>, int, TimeSpan>> Solve()
         {
             return await Task.Run(() =>
             {
+                _stopwatch.Start();
+                
                 var solutionPath = new Stack<Rotation>();
 
                 //Determine the steps required to solve the white cross
@@ -106,8 +114,10 @@ namespace Rubiks.Solvers
                 {
                     solutionPath.Push(step);
                 }
+                
+                _stopwatch.Stop();
 
-                return solutionPath;
+                return new Tuple<Stack<Rotation>, int, TimeSpan>(solutionPath, _generatedStates, _stopwatch.Elapsed);
             });
         }
 
@@ -115,6 +125,7 @@ namespace Rubiks.Solvers
         {
             _state.Rotate(faceColor, direction);
             _currentStepRotations.Push(new Rotation(faceColor, direction));
+            _generatedStates++;
         }
 
         private bool whiteCrossIsSolved()

@@ -1,8 +1,13 @@
-﻿using Rubiks.Enums;
+﻿using System;
+using System.Collections;
+using Rubiks.Enums;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using UnityEngine;
+using UnityEditor;
+using Debug = UnityEngine.Debug;
 
 namespace Rubiks.Solvers
 {
@@ -14,18 +19,25 @@ namespace Rubiks.Solvers
         private readonly CubeState _givenState;
         private RotationDirection _direction;
         private FaceColor _face;
+        private Stopwatch _stopwatch;
+        private int _exploredStates;
+        private int _generatedStates;
 
         public DepthFirstSolver(CubeState initialState)
         {
             _givenState = initialState.Clone();
             _givenState.depth = 0;
+            _generatedStates = 0;
+            _exploredStates = 0;
+            _stopwatch = new Stopwatch();
         }
 
-        public async Task<Stack<Rotation>> Solve()
+        public async Task<Tuple<Stack<Rotation>, int, TimeSpan>> Solve()
         {
             return await Task.Run(() =>
-            {
+            {          
                 Debug.Log("Start");
+                _stopwatch.Start();
                 
                 var solutionPath = new Stack<Rotation>();
 
@@ -38,19 +50,15 @@ namespace Rubiks.Solvers
 
                 //Retrieve the possible rotations
                 var possibleRotations = CubeState.GetPossibleRotations();
-                var count = 1;
 
                 //Loop as long as states remain in the open list
-                while (open.Any())
+                while (open.Any() && _exploredStates < 25000)
                 {
                     //Retrieve the first state in the open list
                     var currentState = open.Pop();
-                    Debug.Log("Dequeueing " + count++ +". Depth is " + currentState.depth);
+                    _exploredStates++;
                     
-                    if (count == 25000)
-                    {
-                        return solutionPath;
-                    }
+                    Debug.Log("Dequeueing state " + _exploredStates +". Depth is " + currentState.depth);
 
                     //Generate the children of the current state if the maximum search depth has not been reached
                     if (currentState.depth <= MAX_DEPTH)
@@ -74,8 +82,8 @@ namespace Rubiks.Solvers
                                 }
 
                                 Debug.Log("End");
-                                
-                                return solutionPath;
+                                _stopwatch.Stop();
+                                return new Tuple<Stack<Rotation>, int, TimeSpan>(solutionPath, _generatedStates, _stopwatch.Elapsed);
                             }
 
                             //Check if the state is already on the open or closed list
@@ -108,6 +116,7 @@ namespace Rubiks.Solvers
                                 childState.rotation = rotation;
                                 childState.depth = (byte) (currentState.depth + 1);
                                 open.Push(childState);
+                                _generatedStates++;
                             }
                         }
                     }
@@ -117,7 +126,8 @@ namespace Rubiks.Solvers
                 }
 
                 //If no solution was found, return the empty list
-                return solutionPath;
+                _stopwatch.Stop();
+                return new Tuple<Stack<Rotation>, int, TimeSpan>(solutionPath, _generatedStates, _stopwatch.Elapsed);
             });
         }
     }

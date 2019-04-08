@@ -1,10 +1,12 @@
-﻿using Rubiks;
+﻿using System;
+using Rubiks;
 using Rubiks.Enums;
 using Rubiks.Solvers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class RubiksCube : MonoBehaviour
 {
@@ -261,6 +263,15 @@ public class RubiksCube : MonoBehaviour
             }
             else
             {
+                var generatedStates = _solveRotations.Count;
+                var requiredMoves = _solveRotations.Count;
+                var time = new TimeSpan();
+                string elapsedTime = $"{time.Seconds}.{time.Milliseconds:000} seconds";
+                
+                Debug.Log("Generated: " + generatedStates);
+                Debug.Log("Moves: " + requiredMoves);
+                Debug.Log("Time: " + elapsedTime);
+                
                 _isSolving = true;
                 _remainingRotationFrames = 0;
             }
@@ -304,7 +315,16 @@ public class RubiksCube : MonoBehaviour
                 _isSearching = true;
 
                 //Determine the path required to solve the cube
-                _solveRotations = await solver.Solve();
+                var solution = await solver.Solve();
+                _solveRotations = solution.Item1;
+                var generatedStates = solution.Item2;
+                var requiredMoves = _solveRotations.Count;
+                var time = solution.Item3;
+                string elapsedTime = $"{time.Seconds}.{time.Milliseconds:000} seconds";
+                
+                Debug.Log("Generated: " + generatedStates);
+                Debug.Log("Moves: " + requiredMoves);
+                Debug.Log("Time: " + elapsedTime);
                 
                 //If a path was returned, set the variables for solving the cube
                 if (_solveRotations.Count > 0)
