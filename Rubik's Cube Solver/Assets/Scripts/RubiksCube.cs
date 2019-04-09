@@ -290,7 +290,6 @@ public class RubiksCube : MonoBehaviour
 
     public async void BreadthFirstSolve()
     {
-        Status.text = "Blah";
         ISolver breadthFirstSolver = new BreadthFirstSolver(_rubiksCube.GetState());
         await Solve(breadthFirstSolver);
     }
@@ -300,7 +299,7 @@ public class RubiksCube : MonoBehaviour
         ISolver depthFirstSolver = new DepthFirstSolver(_rubiksCube.GetState());
         await Solve(depthFirstSolver);
     }
-
+    
     public async void HumanSolve()
     {
         ISolver humanSolver = new HumanSolver(_rubiksCube.GetState());

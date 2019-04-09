@@ -3,13 +3,7 @@ using Rubiks.Constants;
 using Rubiks.Enums;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.SymbolStore;
-using System.Runtime.Serialization.Formatters;
-using System.Threading;
 using System.Threading.Tasks;
-using UnityEditor;
-using UnityEngine.Assertions;
-using UnityEngine.Experimental.PlayerLoop;
 using Debug = UnityEngine.Debug;
 
 namespace Rubiks.Solvers
@@ -39,8 +33,8 @@ namespace Rubiks.Solvers
         private readonly CubeState _state;
         private RotationDirection _direction;
         private FaceColor _face;
-        private bool _isError = false;
-        private Stopwatch _stopwatch;
+        private bool _isError;
+        private readonly Stopwatch _stopwatch;
         private int _generatedStates;
 
         public HumanSolver(CubeState initialState)

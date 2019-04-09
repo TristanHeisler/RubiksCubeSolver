@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Rubiks.Solvers
@@ -13,7 +12,6 @@ namespace Rubiks.Solvers
     {
         private const byte MAX_DEPTH = 3;
 
-        private Queue<Rotation> _currentStepRotations;
         private readonly CubeState _givenState;
         private RotationDirection _direction;
         private FaceColor _face;

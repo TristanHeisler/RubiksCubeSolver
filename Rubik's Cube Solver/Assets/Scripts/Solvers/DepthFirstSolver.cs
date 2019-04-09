@@ -19,7 +19,7 @@ namespace Rubiks.Solvers
         private readonly CubeState _givenState;
         private RotationDirection _direction;
         private FaceColor _face;
-        private Stopwatch _stopwatch;
+        private readonly Stopwatch _stopwatch;
         private int _exploredStates;
         private int _generatedStates;
 
